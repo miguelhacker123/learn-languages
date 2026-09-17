@@ -2,493 +2,1302 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LinguaLearn - Aprenda Idiomas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LinguaLearn 🦉</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
   
-  body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    color: #333;
+  :root {
+    --green: #58cc02;
+    --green-dark: #46a302;
+    --blue: #1cb0f6;
+    --blue-dark: #1899d6;
+    --red: #ff4b4b;
+    --red-dark: #ea2b2b;
+    --yellow: #ffc800;
+    --purple: #ce82ff;
+    --gray: #e5e5e5;
+    --gray-dark: #afafaf;
+    --text: #4b4b4b;
+    --bg: #fff;
   }
 
-  header {
-    background: rgba(255,255,255,0.95);
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  /* ===== HEADER ===== */
+  .topbar {
     position: sticky;
     top: 0;
-    z-index: 100;
+    background: white;
+    border-bottom: 2px solid var(--gray);
+    padding: 0.75rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    z-index: 100;
+    gap: 1rem;
   }
 
-  .logo {
-    font-size: 1.6rem;
-    font-weight: bold;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  nav a {
-    margin-left: 1.5rem;
-    text-decoration: none;
-    color: #555;
-    font-weight: 500;
-    transition: color 0.3s;
-  }
-  nav a:hover { color: #667eea; }
-
-  .hero {
-    text-align: center;
-    padding: 4rem 2rem 3rem;
-    color: white;
-  }
-  .hero h1 {
-    font-size: 2.8rem;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-  }
-  .hero p {
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto 2rem;
-    opacity: 0.95;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem 4rem;
-  }
-
-  .langs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .lang-card {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    border: 3px solid transparent;
-  }
-  .lang-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-    border-color: #667eea;
-  }
-  .lang-card .flag {
-    font-size: 3.5rem;
-    margin-bottom: 0.5rem;
-  }
-  .lang-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.3rem;
-    color: #333;
-  }
-  .lang-card p {
-    color: #777;
-    font-size: 0.9rem;
   }
 
-  .lesson-area {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  .back-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gray-dark);
     display: none;
   }
-  .lesson-area.active { display: block; animation: fadeIn 0.5s; }
+  .back-btn.visible { display: block; }
+
+  .flag-badge {
+    font-size: 1.8rem;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+  }
+
+  .topbar-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .stat.hearts { color: var(--red); }
+  .stat.streak { color: #ff9600; }
+  .stat.xp { color: var(--yellow); }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; padding: 1.5rem; max-width: 600px; margin: 0 auto; }
+  .screen.active { display: block; animation: fadeIn 0.4s ease; }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .lesson-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
+  /* ===== HOME ===== */
+  .hero {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--green);
+    font-weight: 800;
+  }
+  .hero p {
+    color: var(--gray-dark);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  .mascot {
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .lang-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-  .lesson-header h2 {
-    color: #333;
-    font-size: 1.6rem;
-  }
-  .btn-close {
-    background: #ff4757;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-  }
 
-  .phrases-list {
-    display: grid;
-    gap: 0.8rem;
-    margin-bottom: 1.5rem;
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 0.5rem;
-  }
-
-  .phrase {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8f9ff;
-    padding: 1rem 1.2rem;
-    border-radius: 12px;
-    border-left: 4px solid #667eea;
-    transition: background 0.3s;
-  }
-  .phrase:hover { background: #eef1ff; }
-
-  .phrase-text .original {
-    font-weight: 600;
-    color: #333;
-    display: block;
-  }
-  .phrase-text .translation {
-    color: #667eea;
-    font-size: 0.95rem;
-    font-style: italic;
-  }
-
-  .btn-speak {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-  .btn-speak:hover { transform: scale(1.1); }
-
-  .quiz-btn {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    transition: transform 0.2s;
-  }
-  .quiz-btn:hover { transform: translateY(-2px); }
-
-  .quiz-box {
-    margin-top: 1.5rem;
-    padding: 1.5rem;
-    background: #fff8e1;
-    border-radius: 12px;
-    border-left: 4px solid #ffa726;
-    display: none;
-  }
-  .quiz-box.active { display: block; }
-  .quiz-box h4 { margin-bottom: 1rem; color: #e65100; }
-  .quiz-options {
-    display: grid;
-    gap: 0.6rem;
-    margin-top: 1rem;
-  }
-  .quiz-opt {
+  .lang-btn {
     background: white;
-    border: 2px solid #ddd;
-    padding: 0.8rem;
-    border-radius: 8px;
+    border: 2px solid var(--gray);
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 var(--gray);
+    position: relative;
+  }
+  .lang-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue);
+    box-shadow: 0 4px 0 var(--blue);
+  }
+  .lang-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--gray);
+  }
+  .lang-btn .flag { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+  .lang-btn .name { font-weight: 700; color: var(--text); font-size: 1rem; }
+  .lang-btn .progress-mini {
+    font-size: 0.75rem;
+    color: var(--gray-dark);
+    margin-top: 0.3rem;
+  }
+
+  /* ===== TRILHA ===== */
+  .trail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 0 4rem;
+    position: relative;
+  }
+
+  .lesson-node {
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    background: var(--gray);
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 0 var(--gray-dark);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .lesson-node.unlocked {
+    background: var(--green);
+    box-shadow: 0 6px 0 var(--green-dark);
+  }
+  .lesson-node.unlocked:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+  }
+  .lesson-node.unlocked:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 var(--green-dark);
+  }
+  .lesson-node.completed {
+    background: var(--yellow);
+    box-shadow: 0 6px 0 #e5b300;
+  }
+  .lesson-node.locked {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .node-offset-1 { transform: translateX(-40px); }
+  .node-offset-2 { transform: translateX(40px); }
+
+  .node-label {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.3rem;
+    font-size: 0.7rem;
+    color: var(--gray-dark);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ===== LIÇÃO ===== */
+  .lesson-screen {
+    padding: 0 !important;
+    max-width: 100% !important;
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    background: white;
+  }
+  .lesson-screen.active { display: flex; }
+
+  .lesson-progress-bar {
+    height: 16px;
+    background: var(--gray);
+    border-radius: 10px;
+    margin: 1rem 1rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .lesson-progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    position: relative;
+  }
+  .lesson-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    right: 6px;
+    height: 4px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 2px;
+  }
+
+  .lesson-content {
+    flex: 1;
+    padding: 2rem 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .lesson-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  .lesson-sub {
+    color: var(--gray-dark);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  /* ==== EXERCÍCIOS ==== */
+  .exercise-prompt {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .audio-btn-big {
+    background: var(--blue);
+    color: white;
+    border: none;
+    width: 90px;
+    height: 90px;
+    border-radius: 20px;
+    font-size: 2.2rem;
+    cursor: pointer;
+    box-shadow: 0 5px 0 var(--blue-dark);
+    transition: all 0.15s;
+    display: block;
+    margin: 0 auto 2rem;
+  }
+  .audio-btn-big:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--blue-dark); }
+
+  .options {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .option {
+    background: white;
+    border: 2px solid var(--gray);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
     cursor: pointer;
     text-align: left;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text);
+    box-shadow: 0 4px 0 var(--gray);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .option .num {
+    background: white;
+    border: 2px solid var(--gray);
+    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gray-dark);
+    flex-shrink: 0;
+  }
+  .option:hover:not(:disabled) {
+    border-color: var(--blue);
+    background: #f0f9ff;
+  }
+  .option:active:not(:disabled) {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--gray);
+  }
+  .option.correct {
+    background: #d7ffb8;
+    border-color: var(--green);
+    color: var(--green-dark);
+  }
+  .option.correct .num { border-color: var(--green); color: var(--green-dark); }
+  .option.wrong {
+    background: #ffdfe0;
+    border-color: var(--red);
+    color: var(--red-dark);
+  }
+  .option.wrong .num { border-color: var(--red); color: var(--red-dark); }
+  .option:disabled { cursor: default; }
+
+  /* Word bank (montar frase) */
+  .word-bank-area {
+    min-height: 60px;
+    border-bottom: 2px solid var(--gray);
+    border-top: 2px solid var(--gray);
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-content: flex-start;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  .word-chip {
+    background: white;
+    border: 2px solid var(--gray);
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
     font-size: 1rem;
-    transition: all 0.2s;
-  }
-  .quiz-opt:hover { border-color: #667eea; background: #f8f9ff; }
-  .quiz-opt.correct { background: #d4edda; border-color: #28a745; }
-  .quiz-opt.wrong { background: #f8d7da; border-color: #dc3545; }
-
-  .progress {
-    margin-top: 1rem;
     font-weight: 600;
-    color: #667eea;
+    cursor: pointer;
+    box-shadow: 0 3px 0 var(--gray);
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .word-chip:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--gray); }
+  .word-chip.used { opacity: 0.3; pointer-events: none; }
+  .word-chip.placed {
+    background: #e6f4ff;
+    border-color: var(--blue);
+    color: var(--blue-dark);
+    box-shadow: 0 3px 0 var(--blue);
   }
 
-  footer {
-    text-align: center;
+  /* ===== FOOTER DA LIÇÃO ===== */
+  .lesson-footer {
+    border-top: 2px solid var(--gray);
+    padding: 1rem 1.5rem;
+    background: white;
+    position: sticky;
+    bottom: 0;
+  }
+  .lesson-footer-inner {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .feedback-box {
+    flex: 1;
+    display: none;
+    align-items: center;
+    gap: 0.8rem;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.correct { color: var(--green-dark); }
+  .feedback-box.wrong { color: var(--red-dark); }
+  .feedback-icon { font-size: 2rem; }
+  .feedback-text { font-weight: 800; font-size: 1.1rem; }
+  .feedback-sub { font-size: 0.85rem; opacity: 0.8; font-weight: 500; }
+
+  .btn {
+    border: none;
+    border-radius: 14px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: white;
+    min-width: 140px;
+  }
+  .btn-primary {
+    background: var(--green);
+    box-shadow: 0 4px 0 var(--green-dark);
+  }
+  .btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--green-dark); }
+  .btn-primary:disabled {
+    background: var(--gray);
+    box-shadow: 0 4px 0 var(--gray-dark);
+    color: var(--gray-dark);
+    cursor: not-allowed;
+  }
+  .btn-danger {
+    background: var(--red);
+    box-shadow: 0 4px 0 var(--red-dark);
+  }
+  .btn-danger:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--red-dark); }
+  .btn-secondary {
+    background: white;
+    color: var(--gray-dark);
+    border: 2px solid var(--gray);
+    box-shadow: 0 4px 0 var(--gray);
+  }
+
+  /* ===== MODAL RESULTADO ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: fadeIn 0.3s;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 24px;
     padding: 2rem;
-    color: rgba(255,255,255,0.85);
-    font-size: 0.9rem;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal h2 {
+    font-size: 1.8rem;
+    color: var(--yellow);
+    margin-bottom: 0.5rem;
+  }
+  .modal .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .modal .stat-card {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 14px;
+    border: 2px solid var(--gray);
+  }
+  .modal .stat-card .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .modal .stat-card .value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-top: 0.3rem;
+  }
+  .modal .stat-card.xp .value { color: var(--yellow); }
+  .modal .stat-card.acc .value { color: var(--green); }
+  .modal .btn { width: 100%; margin-top: 0.5rem; }
+
+  /* ===== GAME OVER ===== */
+  .gameover-icon { font-size: 5rem; margin-bottom: 1rem; }
+
+  /* ===== RESPONSIVO ===== */
+  @media (max-width: 500px) {
+    .hero h1 { font-size: 1.8rem; }
+    .mascot { font-size: 5rem; }
+    .lesson-node { width: 72px; height: 72px; font-size: 1.5rem; }
   }
 
-  @media (max-width: 600px) {
-    .hero h1 { font-size: 2rem; }
-    nav a { margin-left: 1rem; font-size: 0.9rem; }
-    .lesson-area { padding: 1.2rem; }
+  /* ===== ANIMAÇÕES DE COMEMORAÇÃO ===== */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: var(--yellow);
+    animation: confetti-fall 2s linear forwards;
+    z-index: 9999;
+    pointer-events: none;
   }
+  @keyframes confetti-fall {
+    0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Shake */
+  .shake { animation: shake 0.5s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">🌍 LinguaLearn</div>
-  <nav>
-    <a href="#idiomas">Idiomas</a>
-    <a href="#" onclick="resetAll()">Início</a>
-  </nav>
-</header>
-
-<section class="hero">
-  <h1>Aprenda Idiomas de Graça</h1>
-  <p>Escolha um idioma e comece a praticar frases essenciais com áudio e quizzes interativos.</p>
-</section>
-
-<div class="container">
-  <div id="idiomas" class="langs-grid">
-    <!-- Cards gerados via JS -->
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="back-btn" id="backBtn" onclick="goBack()">←</button>
+    <span class="flag-badge" id="flagBadge">🦉</span>
   </div>
+  <div class="topbar-right">
+    <div class="stat streak">🔥 <span id="streakVal">0</span></div>
+    <div class="stat xp">⚡ <span id="xpVal">0</span></div>
+    <div class="stat hearts">❤️ <span id="heartsVal">5</span></div>
+  </div>
+</div>
 
-  <div id="lesson" class="lesson-area">
-    <div class="lesson-header">
-      <h2 id="lessonTitle"></h2>
-      <button class="btn-close" onclick="closeLesson()">✕ Fechar</button>
-    </div>
-    <div class="phrases-list" id="phrasesList"></div>
-    <button class="quiz-btn" onclick="startQuiz()">🎯 Fazer Quiz</button>
-    <div class="quiz-box" id="quizBox">
-      <h4 id="quizQuestion"></h4>
-      <div class="quiz-options" id="quizOptions"></div>
-      <div class="progress" id="quizProgress"></div>
+<!-- HOME -->
+<div class="screen active" id="homeScreen">
+  <div class="hero">
+    <div class="mascot">🦉</div>
+    <h1>Aprenda idiomas de graça</h1>
+    <p>Divirta-se e ganhe XP todos os dias!</p>
+  </div>
+  <div class="lang-grid" id="langGrid"></div>
+</div>
+
+<!-- TRILHA -->
+<div class="screen" id="trailScreen">
+  <h2 style="text-align:center; margin-bottom: 0.5rem;" id="trailTitle"></h2>
+  <p style="text-align:center; color: var(--gray-dark); margin-bottom: 1.5rem;" id="trailSub"></p>
+  <div class="trail" id="trail"></div>
+</div>
+
+<!-- LIÇÃO -->
+<div class="screen lesson-screen" id="lessonScreen">
+  <div class="lesson-progress-bar">
+    <div class="lesson-progress-fill" id="lessonProgress" style="width: 0%"></div>
+  </div>
+  <div class="lesson-content" id="lessonContent"></div>
+  <div class="lesson-footer">
+    <div class="lesson-footer-inner">
+      <div class="feedback-box" id="feedbackBox">
+        <span class="feedback-icon" id="feedbackIcon"></span>
+        <div>
+          <div class="feedback-text" id="feedbackText"></div>
+          <div class="feedback-sub" id="feedbackSub"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()" disabled>Verificar</button>
     </div>
   </div>
 </div>
 
-<footer>
-  <p>© 2025 LinguaLearn · Feito com ❤️ para quem ama aprender</p>
-</footer>
+<!-- MODAL RESULTADO -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal">
+    <div id="resultIcon" style="font-size: 4rem;">🎉</div>
+    <h2 id="resultTitle">Lição Completa!</h2>
+    <p style="color: var(--gray-dark);" id="resultSub">Você está arrasando!</p>
+    <div class="stats-row">
+      <div class="stat-card xp">
+        <div class="label">XP</div>
+        <div class="value" id="resultXP">+30</div>
+      </div>
+      <div class="stat-card acc">
+        <div class="label">Precisão</div>
+        <div class="value" id="resultAcc">100%</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="closeResult()">Continuar</button>
+  </div>
+</div>
 
 <script>
-const idiomas = [
-  {
-    nome: "Inglês", flag: "🇺🇸", code: "en-US", desc: "Idioma global",
+/* =========================================================
+   DADOS - FRASES POR IDIOMA
+   ========================================================= */
+const IDIOMAS = {
+  en: {
+    nome: "Inglês", flag: "🇺🇸", code: "en-US",
     frases: [
-      { original: "Hello, how are you?", tradução: "Olá, como você está?" },
-      { original: "My name is...", tradução: "Meu nome é..." },
-      { original: "Thank you very much", tradução: "Muito obrigado" },
-      { original: "Where is the bathroom?", tradução: "Onde fica o banheiro?" },
-      { original: "I would like a coffee", tradução: "Eu gostaria de um café" },
-      { original: "How much does it cost?", tradução: "Quanto custa?" },
-      { original: "I don't understand", tradução: "Eu não entendo" },
-      { original: "Can you help me?", tradução: "Você pode me ajudar?" },
-      { original: "Good morning", tradução: "Bom dia" },
-      { original: "See you later", tradução: "Até logo" }
+      { pt: "Olá, como você está?", en: "Hello, how are you?" },
+      { pt: "Meu nome é João", en: "My name is João" },
+      { pt: "Muito obrigado", en: "Thank you very much" },
+      { pt: "Onde fica o banheiro?", en: "Where is the bathroom?" },
+      { pt: "Eu gostaria de um café", en: "I would like a coffee" },
+      { pt: "Quanto custa?", en: "How much does it cost?" },
+      { pt: "Eu não entendo", en: "I don't understand" },
+      { pt: "Você pode me ajudar?", en: "Can you help me?" },
+      { pt: "Bom dia", en: "Good morning" },
+      { pt: "Até logo", en: "See you later" },
+      { pt: "Eu amo aprender", en: "I love learning" },
+      { pt: "Qual é o seu nome?", en: "What is your name?" }
     ]
   },
-  {
-    nome: "Espanhol", flag: "🇪🇸", code: "es-ES", desc: "Língua romance",
+  es: {
+    nome: "Espanhol", flag: "🇪🇸", code: "es-ES",
     frases: [
-      { original: "Hola, ¿cómo estás?", tradução: "Olá, como você está?" },
-      { original: "Me llamo...", tradução: "Meu nome é..." },
-      { original: "Muchas gracias", tradução: "Muito obrigado" },
-      { original: "¿Dónde está el baño?", tradução: "Onde fica o banheiro?" },
-      { original: "Quisiera un café", tradução: "Eu gostaria de um café" },
-      { original: "¿Cuánto cuesta?", tradução: "Quanto custa?" },
-      { original: "No entiendo", tradução: "Eu não entendo" },
-      { original: "¿Puedes ayudarme?", tradução: "Você pode me ajudar?" },
-      { original: "Buenos días", tradução: "Bom dia" },
-      { original: "Hasta luego", tradução: "Até logo" }
+      { pt: "Olá, como você está?", en: "Hola, ¿cómo estás?" },
+      { pt: "Meu nome é João", en: "Me llamo João" },
+      { pt: "Muito obrigado", en: "Muchas gracias" },
+      { pt: "Onde fica o banheiro?", en: "¿Dónde está el baño?" },
+      { pt: "Eu gostaria de um café", en: "Quisiera un café" },
+      { pt: "Quanto custa?", en: "¿Cuánto cuesta?" },
+      { pt: "Eu não entendo", en: "No entiendo" },
+      { pt: "Você pode me ajudar?", en: "¿Puedes ayudarme?" },
+      { pt: "Bom dia", en: "Buenos días" },
+      { pt: "Até logo", en: "Hasta luego" },
+      { pt: "Eu amo aprender", en: "Me encanta aprender" },
+      { pt: "Qual é o seu nome?", en: "¿Cómo te llamas?" }
     ]
   },
-  {
-    nome: "Francês", flag: "🇫🇷", code: "fr-FR", desc: "Idioma do amor",
+  fr: {
+    nome: "Francês", flag: "🇫🇷", code: "fr-FR",
     frases: [
-      { original: "Bonjour, comment allez-vous?", tradução: "Olá, como vai?" },
-      { original: "Je m'appelle...", tradução: "Meu nome é..." },
-      { original: "Merci beaucoup", tradução: "Muito obrigado" },
-      { original: "Où sont les toilettes?", tradução: "Onde fica o banheiro?" },
-      { original: "Je voudrais un café", tradução: "Eu gostaria de um café" },
-      { original: "Combien ça coûte?", tradução: "Quanto custa?" },
-      { original: "Je ne comprends pas", tradução: "Eu não entendo" },
-      { original: "Pouvez-vous m'aider?", tradução: "Você pode me ajudar?" },
-      { original: "Bonjour", tradução: "Bom dia" },
-      { original: "À bientôt", tradução: "Até logo" }
+      { pt: "Olá, como você está?", en: "Bonjour, comment allez-vous?" },
+      { pt: "Meu nome é João", en: "Je m'appelle João" },
+      { pt: "Muito obrigado", en: "Merci beaucoup" },
+      { pt: "Onde fica o banheiro?", en: "Où sont les toilettes?" },
+      { pt: "Eu gostaria de um café", en: "Je voudrais un café" },
+      { pt: "Quanto custa?", en: "Combien ça coûte?" },
+      { pt: "Eu não entendo", en: "Je ne comprends pas" },
+      { pt: "Você pode me ajudar?", en: "Pouvez-vous m'aider?" },
+      { pt: "Bom dia", en: "Bonjour" },
+      { pt: "Até logo", en: "À bientôt" },
+      { pt: "Eu amo aprender", en: "J'adore apprendre" },
+      { pt: "Qual é o seu nome?", en: "Comment tu t'appelles?" }
     ]
   },
-  {
-    nome: "Alemão", flag: "🇩🇪", code: "de-DE", desc: "Língua germânica",
+  de: {
+    nome: "Alemão", flag: "🇩🇪", code: "de-DE",
     frases: [
-      { original: "Hallo, wie geht es dir?", tradução: "Olá, como vai?" },
-      { original: "Ich heiße...", tradução: "Meu nome é..." },
-      { original: "Vielen Dank", tradução: "Muito obrigado" },
-      { original: "Wo ist die Toilette?", tradução: "Onde fica o banheiro?" },
-      { original: "Ich möchte einen Kaffee", tradução: "Eu gostaria de um café" },
-      { original: "Wie viel kostet das?", tradução: "Quanto custa?" },
-      { original: "Ich verstehe nicht", tradução: "Eu não entendo" },
-      { original: "Können Sie mir helfen?", tradução: "Pode me ajudar?" },
-      { original: "Guten Morgen", tradução: "Bom dia" },
-      { original: "Bis später", tradução: "Até logo" }
+      { pt: "Olá, como você está?", en: "Hallo, wie geht es dir?" },
+      { pt: "Meu nome é João", en: "Ich heiße João" },
+      { pt: "Muito obrigado", en: "Vielen Dank" },
+      { pt: "Onde fica o banheiro?", en: "Wo ist die Toilette?" },
+      { pt: "Eu gostaria de um café", en: "Ich möchte einen Kaffee" },
+      { pt: "Quanto custa?", en: "Wie viel kostet das?" },
+      { pt: "Eu não entendo", en: "Ich verstehe nicht" },
+      { pt: "Você pode me ajudar?", en: "Können Sie mir helfen?" },
+      { pt: "Bom dia", en: "Guten Morgen" },
+      { pt: "Até logo", en: "Bis später" },
+      { pt: "Eu amo aprender", en: "Ich liebe es zu lernen" },
+      { pt: "Qual é o seu nome?", en: "Wie heißt du?" }
     ]
   },
-  {
-    nome: "Italiano", flag: "🇮🇹", code: "it-IT", desc: "Idioma da música",
+  it: {
+    nome: "Italiano", flag: "🇮🇹", code: "it-IT",
     frases: [
-      { original: "Ciao, come stai?", tradução: "Olá, como vai?" },
-      { original: "Mi chiamo...", tradução: "Meu nome é..." },
-      { original: "Grazie mille", tradução: "Muito obrigado" },
-      { original: "Dov'è il bagno?", tradução: "Onde fica o banheiro?" },
-      { original: "Vorrei un caffè", tradução: "Eu gostaria de um café" },
-      { original: "Quanto costa?", tradução: "Quanto custa?" },
-      { original: "Non capisco", tradução: "Eu não entendo" },
-      { original: "Puoi aiutarmi?", tradução: "Pode me ajudar?" },
-      { original: "Buongiorno", tradução: "Bom dia" },
-      { original: "A dopo", tradução: "Até logo" }
+      { pt: "Olá, como você está?", en: "Ciao, come stai?" },
+      { pt: "Meu nome é João", en: "Mi chiamo João" },
+      { pt: "Muito obrigado", en: "Grazie mille" },
+      { pt: "Onde fica o banheiro?", en: "Dov'è il bagno?" },
+      { pt: "Eu gostaria de um café", en: "Vorrei un caffè" },
+      { pt: "Quanto custa?", en: "Quanto costa?" },
+      { pt: "Eu não entendo", en: "Non capisco" },
+      { pt: "Você pode me ajudar?", en: "Puoi aiutarmi?" },
+      { pt: "Bom dia", en: "Buongiorno" },
+      { pt: "Até logo", en: "A dopo" },
+      { pt: "Eu amo aprender", en: "Adoro imparare" },
+      { pt: "Qual é o seu nome?", en: "Come ti chiami?" }
     ]
   },
-  {
-    nome: "Japonês", flag: "🇯🇵", code: "ja-JP", desc: "Idioma do sol nascente",
+  ja: {
+    nome: "Japonês", flag: "🇯🇵", code: "ja-JP",
     frases: [
-      { original: "こんにちは (Konnichiwa)", tradução: "Olá" },
-      { original: "私の名前は... (Watashi no namae wa...)", tradução: "Meu nome é..." },
-      { original: "ありがとう (Arigatou)", tradução: "Obrigado" },
-      { original: "トイレはどこですか？(Toire wa doko desu ka?)", tradução: "Onde fica o banheiro?" },
-      { original: "コーヒーをください (Koohii o kudasai)", tradução: "Um café, por favor" },
-      { original: "いくらですか？(Ikura desu ka?)", tradução: "Quanto custa?" },
-      { original: "わかりません (Wakarimasen)", tradução: "Eu não entendo" },
-      { original: "助けてもらえますか？(Tasukete moraemasu ka?)", tradução: "Pode me ajudar?" },
-      { original: "おはよう (Ohayou)", tradução: "Bom dia" },
-      { original: "またね (Mata ne)", tradução: "Até logo" }
+      { pt: "Olá", en: "こんにちは" },
+      { pt: "Meu nome é João", en: "私はジョアンです" },
+      { pt: "Muito obrigado", en: "ありがとうございます" },
+      { pt: "Onde fica o banheiro?", en: "トイレはどこですか" },
+      { pt: "Um café, por favor", en: "コーヒーをください" },
+      { pt: "Quanto custa?", en: "いくらですか" },
+      { pt: "Eu não entendo", en: "わかりません" },
+      { pt: "Pode me ajudar?", en: "助けてもらえますか" },
+      { pt: "Bom dia", en: "おはようございます" },
+      { pt: "Até logo", en: "またね" },
+      { pt: "Eu amo aprender", en: "学ぶことが大好きです" },
+      { pt: "Qual é o seu nome?", en: "お名前は何ですか" }
     ]
   }
-];
+};
 
-let idiomaAtual = null;
-let quizIndex = 0;
-let quizAcertos = 0;
+/* =========================================================
+   ESTADO GLOBAL
+   ========================================================= */
+const LESSONS_PER_LANG = 6;
+const EXERCISES_PER_LESSON = 6;
 
-function renderIdiomas() {
-  const grid = document.getElementById('idiomas');
-  grid.innerHTML = idiomas.map((idioma, i) => `
-    <div class="lang-card" onclick="abrirIdioma(${i})">
-      <div class="flag">${idioma.flag}</div>
-      <h3>${idioma.nome}</h3>
-      <p>${idioma.desc}</p>
-    </div>
+const state = {
+  idiomaAtual: null,
+  telaAtual: 'home',
+  usuario: {
+    xp: 0,
+    hearts: 5,
+    streak: 0,
+    lastPlayed: null,
+    progresso: {} // { en: [true, true, false, ...], es: [...] }
+  },
+  licaoAtual: {
+    exercicios: [],
+    indice: 0,
+    acertos: 0,
+    total: 0
+  }
+};
+
+/* =========================================================
+   PERSISTÊNCIA
+   ========================================================= */
+function salvar() {
+  localStorage.setItem('lingualearn_state', JSON.stringify(state.usuario));
+}
+
+function carregar() {
+  const raw = localStorage.getItem('lingualearn_state');
+  if (raw) {
+    try {
+      const u = JSON.parse(raw);
+      state.usuario = { ...state.usuario, ...u };
+      // Verificar streak
+      const hoje = new Date().toDateString();
+      const ontem = new Date(Date.now() - 86400000).toDateString();
+      if (state.usuario.lastPlayed && state.usuario.lastPlayed !== hoje && state.usuario.lastPlayed !== ontem) {
+        state.usuario.streak = 0;
+      }
+    } catch(e) {}
+  }
+  atualizarTopbar();
+}
+
+function atualizarTopbar() {
+  document.getElementById('streakVal').textContent = state.usuario.streak;
+  document.getElementById('xpVal').textContent = state.usuario.xp;
+  document.getElementById('heartsVal').textContent = state.usuario.hearts;
+}
+
+/* =========================================================
+   NAVEGAÇÃO
+   ========================================================= */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const backBtn = document.getElementById('backBtn');
+  if (id === 'homeScreen') {
+    backBtn.classList.remove('visible');
+    document.getElementById('flagBadge').textContent = '🦉';
+  } else if (id === 'trailScreen') {
+    backBtn.classList.add('visible');
+  } else {
+    backBtn.classList.remove('visible');
+  }
+}
+
+function goBack() {
+  if (state.telaAtual === 'trail') {
+    state.telaAtual = 'home';
+    renderHome();
+    showScreen('homeScreen');
+  }
+}
+
+/* =========================================================
+   HOME
+   ========================================================= */
+function renderHome() {
+  const grid = document.getElementById('langGrid');
+  grid.innerHTML = Object.entries(IDIOMAS).map(([key, lang]) => {
+    const prog = state.usuario.progresso[key] || [];
+    const completed = prog.filter(Boolean).length;
+    return `
+      <button class="lang-btn" onclick="abrirIdioma('${key}')">
+        <span class="flag">${lang.flag}</span>
+        <div class="name">${lang.nome}</div>
+        <div class="progress-mini">${completed}/${LESSONS_PER_LANG} lições</div>
+      </button>
+    `;
+  }).join('');
+}
+
+/* =========================================================
+   TRILHA
+   ========================================================= */
+function abrirIdioma(key) {
+  state.idiomaAtual = key;
+  state.telaAtual = 'trail';
+  document.getElementById('flagBadge').textContent = IDIOMAS[key].flag;
+  renderTrail();
+  showScreen('trailScreen');
+}
+
+function renderTrail() {
+  const lang = IDIOMAS[state.idiomaAtual];
+  document.getElementById('trailTitle').textContent = `${lang.flag} ${lang.nome}`;
+  document.getElementById('trailSub').textContent = 'Complete as lições para avançar';
+
+  const prog = state.usuario.progresso[state.idiomaAtual] || [];
+  const trail = document.getElementById('trail');
+
+  let html = '';
+  for (let i = 0; i < LESSONS_PER_LANG; i++) {
+    const completed = prog[i] === true;
+    const unlocked = i === 0 || prog[i-1] === true;
+    const offset = i % 3 === 0 ? '' : (i % 3 === 1 ? 'node-offset-1' : 'node-offset-2');
+    const cls = completed ? 'completed' : (unlocked ? 'unlocked' : 'locked');
+    const icon = completed ? '👑' : (unlocked ? (i+1) : '🔒');
+    html += `
+      <button class="lesson-node ${cls} ${offset}" onclick="iniciarLicao(${i})" ${!unlocked ? 'disabled' : ''}>
+        ${icon}
+        <span class="node-label">Lição ${i+1}</span>
+      </button>
+    `;
+  }
+  trail.innerHTML = html;
+}
+
+/* =========================================================
+   MOTOR DE EXERCÍCIOS
+   ========================================================= */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function gerarExercicios(idiomaKey, lessonIndex) {
+  const frases = IDIOMAS[idiomaKey].frases;
+  // Cada lição usa 6 frases (rotaciona um pouco)
+  const start = (lessonIndex * 2) % frases.length;
+  const selecionadas = [];
+  for (let i = 0; i < EXERCISES_PER_LESSON; i++) {
+    selecionadas.push(frases[(start + i) % frases.length]);
+  }
+
+  return selecionadas.map((frase, idx) => {
+    const tipo = idx % 4; // 0=multiple choice PT->Lang, 1=traduzir (banco), 2=ouvir, 3=Lang->PT
+    const todas = frases.filter(f => f.en !== frase.en);
+
+    if (tipo === 0 || tipo === 3) {
+      // múltipla escolha
+      const isPT2Lang = tipo === 0;
+      const pergunta = isPT2Lang ? frase.pt : frase.en;
+      const correta = isPT2Lang ? frase.en : frase.pt;
+      const distratores = shuffle(todas).slice(0, 3).map(f => isPT2Lang ? f.en : f.pt);
+      return {
+        tipo: 'multipla',
+        pergunta,
+        perguntaLabel: isPT2Lang ? 'Como se diz em ' + IDIOMAS[idiomaKey].nome + '?' : 'O que significa?',
+        correta,
+        opcoes: shuffle([correta, ...distratores]),
+        frase
+      };
+    } else if (tipo === 1) {
+      // banco de palavras - montar tradução
+      const palavrasCorretas = frase.en.split(/\s+/);
+      const palavrasExtra = shuffle(todas).slice(0, 2).flatMap(f => f.en.split(/\s+/)).slice(0, 3);
+      const banco = shuffle([...palavrasCorretas, ...palavrasExtra]);
+      return {
+        tipo: 'banco',
+        pergunta: frase.pt,
+        perguntaLabel: 'Traduza para ' + IDIOMAS[idiomaKey].nome,
+        correta: frase.en,
+        banco,
+        frase
+      };
+    } else {
+      // ouvir
+      const distratores = shuffle(todas).slice(0, 3).map(f => f.en);
+      return {
+        tipo: 'ouvir',
+        pergunta: frase.en,
+        perguntaLabel: 'O que você ouviu?',
+        correta: frase.pt,
+        opcoes: shuffle([frase.pt, ...shuffle(todas).slice(0,3).map(f => f.pt)]),
+        frase
+      };
+    }
+  });
+}
+
+/* =========================================================
+   LIÇÃO
+   ========================================================= */
+function iniciarLicao(idx) {
+  if (state.usuario.hearts <= 0) {
+    mostrarGameOver();
+    return;
+  }
+
+  const idioma = IDIOMAS[state.idiomaAtual];
+  const exercicios = gerarExercicios(state.idiomaAtual, idx);
+  state.licaoAtual = {
+    exercicios,
+    indice: 0,
+    acertos: 0,
+    total: exercicios.length,
+    lessonIdx: idx
+  };
+
+  state.telaAtual = 'lesson';
+  document.getElementById('flagBadge').textContent = idioma.flag;
+  showScreen('lessonScreen');
+  document.getElementById('backBtn').classList.remove('visible');
+  renderExercicio();
+}
+
+function renderExercicio() {
+  const { exercicios, indice } = state.licaoAtual;
+  if (indice >= exercicios.length) return finalizarLicao();
+
+  const ex = exercicios[indice];
+  const content = document.getElementById('lessonContent');
+  const feedbackBox = document.getElementById('feedbackBox');
+  const checkBtn = document.getElementById('checkBtn');
+  feedbackBox.style.display = 'none';
+  feedbackBox.className = 'feedback-box';
+  checkBtn.textContent = 'Verificar';
+  checkBtn.className = 'btn btn-primary';
+  checkBtn.disabled = true;
+  checkBtn.onclick = checkAnswer;
+
+  const pct = (indice / exercicios.length) * 100;
+  document.getElementById('lessonProgress').style.width = pct + '%';
+
+  let html = `
+    <div class="lesson-sub">Lição ${state.licaoAtual.lessonIdx + 1} · ${indice + 1}/${exercicios.length}</div>
+    <div class="exercise-prompt">${ex.perguntaLabel}</div>
+  `;
+
+  if (ex.tipo === 'multipla' || ex.tipo === 'ouvir') {
+    if (ex.tipo === 'ouvir') {
+      html += `<button class="audio-btn-big" onclick="falar('${ex.pergunta.replace(/'/g, "\\'")}')">🔊</button>`;
+      html += `<p style="text-align:center; color: var(--gray-dark); font-size: 0.9rem; margin-bottom: 1.5rem;">Toque para ouvir novamente</p>`;
+    } else {
+      html += `<h2 style="font-size: 1.6rem; margin-bottom: 1.5rem;">"${ex.pergunta}"</h2>`;
+    }
+    html += `<div class="options">`;
+    ex.opcoes.forEach((op, i) => {
+      const letra = String.fromCharCode(65 + i);
+      html += `<button class="option" data-value="${op.replace(/"/g, '&quot;')}" onclick="selecionarOpcao(this, '${op.replace(/'/g, "\\'")}')">
+        <span class="num">${letra}</span>
+        <span>${op}</span>
+      </button>`;
+    });
+    html += `</div>`;
+  } else if (ex.tipo === 'banco') {
+    html += `<h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">"${ex.pergunta}"</h2>`;
+    html += `<div class="word-bank-area" id="wordBankArea"></div>`;
+    html += `<div class="word-bank" id="wordBank">`;
+    ex.banco.forEach((p, i) => {
+      html += `<button class="word-chip" data-word="${p.replace(/"/g, '&quot;')}" data-idx="${i}" onclick="usarPalavra(this)">${p}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  content.innerHTML = html;
+
+  if (ex.tipo === 'ouvir') {
+    setTimeout(() => falar(ex.pergunta), 400);
+  }
+}
+
+let respostaSelecionada = null;
+let palavrasUsadas = [];
+
+function selecionarOpcao(btn, valor) {
+  if (btn.disabled || document.getElementById('checkBtn').textContent === 'Continuar') return;
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  btn.classList.add('selected');
+  respostaSelecionada = valor;
+  // Marca visual
+  document.querySelectorAll('.option').forEach(o => {
+    if (o === btn) {
+      o.style.borderColor = 'var(--blue)';
+      o.style.background = '#e6f4ff';
+    } else {
+      o.style.borderColor = 'var(--gray)';
+      o.style.background = 'white';
+    }
+  });
+  document.getElementById('checkBtn').disabled = false;
+}
+
+function usarPalavra(btn) {
+  if (btn.classList.contains('used')) return;
+  const word = btn.dataset.word;
+  const idx = btn.dataset.idx;
+  btn.classList.add('used');
+  palavrasUsadas.push({ word, idx });
+  renderWordBankArea();
+  document.getElementById('checkBtn').disabled = palavrasUsadas.length === 0;
+}
+
+function removerPalavra(idx) {
+  palavrasUsadas = palavrasUsadas.filter(p => p.idx !== idx);
+  document.querySelectorAll('.word-chip').forEach(c => {
+    if (c.dataset.idx === String(idx)) c.classList.remove('used');
+  });
+  renderWordBankArea();
+  document.getElementById('checkBtn').disabled = palavrasUsadas.length === 0;
+}
+
+function renderWordBankArea() {
+  const area = document.getElementById('wordBankArea');
+  if (!area) return;
+  area.innerHTML = palavrasUsadas.map(p => `
+    <button class="word-chip placed" onclick="removerPalavra('${p.idx}')">${p.word}</button>
   `).join('');
 }
 
-function abrirIdioma(i) {
-  idiomaAtual = idiomas[i];
-  document.getElementById('lessonTitle').textContent = `${idiomaAtual.flag} ${idiomaAtual.nome}`;
-  const list = document.getElementById('phrasesList');
-  list.innerHTML = idiomaAtual.frases.map((f, idx) => `
-    <div class="phrase">
-      <div class="phrase-text">
-        <span class="original">${f.original}</span>
-        <span class="translation">${f.tradução}</span>
-      </div>
-      <button class="btn-speak" onclick="falar('${f.original.replace(/'/g, "\\'")}')">🔊</button>
-    </div>
-  `).join('');
-  document.getElementById('lesson').classList.add('active');
-  document.getElementById('quizBox').classList.remove('active');
-  document.getElementById('lesson').scrollIntoView({ behavior: 'smooth' });
+/* =========================================================
+   VERIFICAR RESPOSTA
+   ========================================================= */
+function checkAnswer() {
+  const { exercicios, indice } = state.licaoAtual;
+  const ex = exercicios[indice];
+  let resposta = '';
+  let correta = false;
+
+  if (ex.tipo === 'multipla' || ex.tipo === 'ouvir') {
+    resposta = respostaSelecionada || '';
+    correta = resposta === ex.correta;
+    // Marcar botões
+    document.querySelectorAll('.option').forEach(btn => {
+      btn.disabled = true;
+      const val = btn.dataset.value;
+      if (val === ex.correta) btn.classList.add('correct');
+      else if (btn.classList.contains('selected') && val !== ex.correta) btn.classList.add('wrong');
+      btn.style.borderColor = '';
+      btn.style.background = '';
+    });
+  } else if (ex.tipo === 'banco') {
+    resposta = palavrasUsadas.map(p => p.word).join(' ');
+    correta = resposta === ex.correta;
+    document.querySelectorAll('.word-chip').forEach(c => c.disabled = true);
+  }
+
+  // Feedback
+  const fb = document.getElementById('feedbackBox');
+  const icon = document.getElementById('feedbackIcon');
+  const text = document.getElementById('feedbackText');
+  const sub = document.getElementById('feedbackSub');
+  fb.style.display = 'flex';
+
+  if (correta) {
+    state.licaoAtual.acertos++;
+    fb.classList.add('correct');
+    icon.textContent = '✅';
+    text.textContent = 'Muito bem!';
+    sub.textContent = shuffle(['Boa!', 'Continue assim!', 'Excelente!', 'Você consegue!'])[0];
+    tocarSom('correct');
+  } else {
+    state.usuario.hearts = Math.max(0, state.usuario.hearts - 1);
+    atualizarTopbar();
+    salvar();
+    fb.classList.add('wrong');
+    icon.textContent = '❌';
+    text.textContent = 'Resposta correta:';
+    sub.textContent = ex.correta;
+    tocarSom('wrong');
+    document.querySelector('.lesson-content').classList.add('shake');
+    setTimeout(() => document.querySelector('.lesson-content').classList.remove('shake'), 500);
+  }
+
+  // Mudar botão para "Continuar"
+  const btn = document.getElementById('checkBtn');
+  btn.textContent = 'Continuar';
+  btn.className = correta ? 'btn btn-primary' : 'btn btn-danger';
+  btn.disabled = false;
+  btn.onclick = proximoExercicio;
+
+  // Verificar game over
+  if (state.usuario.hearts <= 0) {
+    setTimeout(() => mostrarGameOver(), 1500);
+  }
 }
 
+function proximoExercicio() {
+  state.licaoAtual.indice++;
+  respostaSelecionada = null;
+  palavrasUsadas = [];
+  renderExercicio();
+}
+
+/* =========================================================
+   FINALIZAR LIÇÃO
+   ========================================================= */
+function finalizarLicao() {
+  const { acertos, total, lessonIdx } = state.licaoAtual;
+  const xpGanho = acertos * 10;
+  const precisao = Math.round((acertos / total) * 100);
+
+  // Atualizar progresso
+  state.usuario.xp += xpGanho;
+  if (!state.usuario.progresso[state.idiomaAtual]) {
+    state.usuario.progresso[state.idiomaAtual] = [];
+  }
+  if (precisao >= 60) {
+    state.usuario.progresso[state.idiomaAtual][lessonIdx] = true;
+  }
+
+  // Streak
+  const hoje = new Date().toDateString();
+  const ontem = new Date(Date.now() - 86400000).toDateString();
+  if (state.usuario.lastPlayed !== hoje) {
+    if (state.usuario.lastPlayed === ontem) {
+      state.usuario.streak++;
+    } else {
+      state.usuario.streak = 1;
+    }
+    state.usuario.lastPlayed = hoje;
+  }
+
+  atualizarTopbar();
+  salvar();
+
+  // Modal
+  document.getElementById('resultXP').textContent = '+' + xpGanho;
+  document.getElementById('resultAcc').textContent = precisao + '%';
+  const icon = document.getElementById('resultIcon');
+  const title = document.getElementById('resultTitle');
+  const sub = document.getElementById('resultSub');
+  if (precisao === 100) {
+    icon.textContent = '🏆';
+    title.textContent = 'Perfeito!';
+    sub.textContent = 'Você acertou tudo!';
+  } else if (precisao >= 60) {
+    icon.textContent = '🎉';
+    title.textContent = 'Lição Completa!';
+    sub.textContent = 'Bom trabalho!';
+  } else {
+    icon.textContent = '💪';
+    title.textContent = 'Continue tentando!';
+    sub.textContent = 'Você vai conseguir!';
+  }
+  document.getElementById('resultModal').classList.add('active');
+
+  if (precisao >= 60) {
+    soltarConfetes();
+    tocarSom('complete');
+  }
+}
+
+function closeResult() {
+  document.getElementById('resultModal').classList.remove('active');
+  state.telaAtual = 'trail';
+  renderTrail();
+  showScreen('trailScreen');
+}
+
+/* =========================================================
+   GAME OVER (SEM CORAÇÕES)
+   ========================================================= */
+function mostrarGameOver() {
+  const modal = document.getElementById('resultModal');
+  document.getElementById('resultIcon').textContent = '💔';
+  document.getElementById('resultIcon').className = 'gameover-icon';
+  document.getElementById('resultTitle').textContent = 'Sem corações!';
+  document.getElementById('resultSub').textContent = 'Você pode tentar novamente ou esperar para recuperar.';
+  document.getElementById('resultXP').textContent = '+0';
+  document.getElementById('resultAcc').textContent = '—';
+  modal.querySelector('.btn').textContent = 'Voltar';
+
+  // Botão de recarregar corações
+  if (!document.getElementById('restoreBtn')) {
+    const b = document.createElement('button');
+    b.id = 'restoreBtn';
+    b.className = 'btn btn-secondary';
+    b.style.marginTop = '0.5rem';
+    b.textContent = '❤️ Recuperar corações';
+    b.onclick = () => {
+      state.usuario.hearts = 5;
+      atualizarTopbar();
+      salvar();
+      modal.classList.remove('active');
+      closeResult();
+    };
+    modal.appendChild(b);
+  }
+  modal.classList.add('active');
+}
+
+/* =========================================================
+   ÁUDIO E SONS
+   ========================================================= */
 function falar(texto) {
   if (!('speechSynthesis' in window)) {
     alert('Seu navegador não suporta síntese de voz.');
     return;
   }
-  // Remove romanização entre parênteses para japonês
-  const limpo = texto.replace(/\s*\(.*?\)\s*/g, '').trim();
-  const utter = new SpeechSynthesisUtterance(limpo);
-  utter.lang = idiomaAtual.code;
-  utter.rate = 0.9;
+  const utter = new SpeechSynthesisUtterance(texto);
+  utter.lang = IDIOMAS[state.idiomaAtual].code;
+  utter.rate = 0.85;
+  utter.pitch = 1;
   speechSynthesis.cancel();
   speechSynthesis.speak(utter);
 }
 
-function closeLesson() {
-  document.getElementById('lesson').classList.remove('active');
-}
-
-function startQuiz() {
-  quizIndex = 0;
-  quizAcertos = 0;
-  document.getElementById('quizBox').classList.add('active');
-  proximaPergunta();
-}
-
-function proximaPergunta() {
-  if (quizIndex >= 5) {
-    document.getElementById('quizQuestion').textContent = `🎉 Quiz concluído! Acertos: ${quizAcertos}/5`;
-    document.getElementById('quizOptions').innerHTML = '';
-    document.getElementById('quizProgress').textContent = quizAcertos >= 4 ? 'Excelente!' : 'Continue praticando!';
-    return;
-  }
-
-  const frase = idiomaAtual.frases[Math.floor(Math.random() * idiomaAtual.frases.length)];
-  const correta = frase.tradução;
-  const opcoes = [correta];
-  
-  while (opcoes.length < 4) {
-    const aleatoria = idiomaAtual.frases[Math.floor(Math.random() * idiomaAtual.frases.length)].tradução;
-    if (!opcoes.includes(aleatoria)) opcoes.push(aleatoria);
-  }
-  opcoes.sort(() => Math.random() - 0.5);
-
-  document.getElementById('quizQuestion').textContent = `O que significa: "${frase.original}"?`;
-  document.getElementById('quizProgress').textContent = `Pergunta ${quizIndex + 1} de 5`;
-
-  document.getElementById('quizOptions').innerHTML = opcoes.map(op => `
-    <button class="quiz-opt" onclick="responder(this, '${op.replace(/'/g, "\\'")}', '${correta.replace(/'/g, "\\'")}')">${op}</button>
-  `).join('');
-}
-
-function responder(btn, escolha, correta) {
-  const opts = document.querySelectorAll('.quiz-opt');
-  opts.forEach(o => o.disabled = true);
-
-  if (escolha === correta) {
-    btn.classList.add('correct');
-    quizAcertos++;
-  } else {
-    btn.classList.add('wrong');
-    opts.forEach(o => {
-      if (o.textContent === correta) o.classList.add('correct');
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = tipo === 'correct' ? [523.25, 659.25, 783.99] : [392, 311.13];
+    notes.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + i * 0.1);
+      osc.stop(audioCtx.currentTime + i * 0.1 + 0.25);
     });
+  } catch(e) {}
+}
+
+function soltarConfetes() {
+  const colors = ['#58cc02', '#1cb0f6', '#ffc800', '#ff4b4b', '#ce82ff'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = Math.random() * 0.5 + 's';
+    c.style.animationDuration = (1.5 + Math.random()) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
   }
-
-  quizIndex++;
-  setTimeout(proximaPergunta, 1200);
 }
 
-function resetAll() {
-  closeLesson();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// Inicializa
-renderIdiomas();
+/* =========================================================
+   INIT
+   ========================================================= */
+carregar();
+renderHome();
 </script>
 </body>
 </html>
