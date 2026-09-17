@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaLearn - Aprenda Idiomas</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+  }
+
+  header {
+    background: rgba(255,255,255,0.95);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  nav a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+  nav a:hover { color: #667eea; }
+
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    color: white;
+  }
+  .hero h1 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  }
+  .hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    opacity: 0.95;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .langs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .lang-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 3px solid transparent;
+  }
+  .lang-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    border-color: #667eea;
+  }
+  .lang-card .flag {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .lang-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+    color: #333;
+  }
+  .lang-card p {
+    color: #777;
+    font-size: 0.9rem;
+  }
+
+  .lesson-area {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    display: none;
+  }
+  .lesson-area.active { display: block; animation: fadeIn 0.5s; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .lesson-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .lesson-header h2 {
+    color: #333;
+    font-size: 1.6rem;
+  }
+  .btn-close {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .phrases-list {
+    display: grid;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+  }
+
+  .phrase {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9ff;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+    transition: background 0.3s;
+  }
+  .phrase:hover { background: #eef1ff; }
+
+  .phrase-text .original {
+    font-weight: 600;
+    color: #333;
+    display: block;
+  }
+  .phrase-text .translation {
+    color: #667eea;
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+
+  .btn-speak {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-speak:hover { transform: scale(1.1); }
+
+  .quiz-btn {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s;
+  }
+  .quiz-btn:hover { transform: translateY(-2px); }
+
+  .quiz-box {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: #fff8e1;
+    border-radius: 12px;
+    border-left: 4px solid #ffa726;
+    display: none;
+  }
+  .quiz-box.active { display: block; }
+  .quiz-box h4 { margin-bottom: 1rem; color: #e65100; }
+  .quiz-options {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+  .quiz-opt {
+    background: white;
+    border: 2px solid #ddd;
+    padding: 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .quiz-opt:hover { border-color: #667eea; background: #f8f9ff; }
+  .quiz-opt.correct { background: #d4edda; border-color: #28a745; }
+  .quiz-opt.wrong { background: #f8d7da; border-color: #dc3545; }
+
+  .progress {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #667eea;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2rem; }
+    nav a { margin-left: 1rem; font-size: 0.9rem; }
+    .lesson-area { padding: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌍 LinguaLearn</div>
+  <nav>
+    <a href="#idiomas">Idiomas</a>
+    <a href="#" onclick="resetAll()">Início</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Aprenda Idiomas de Graça</h1>
+  <p>Escolha um idioma e comece a praticar frases essenciais com áudio e quizzes interativos.</p>
+</section>
+
+<div class="container">
+  <div id="idiomas" class="langs-grid">
+    <!-- Cards gerados via JS -->
+  </div>
+
+  <div id="lesson" class="lesson-area">
+    <div class="lesson-header">
+      <h2 id="lessonTitle"></h2>
+      <button class="btn-close" onclick="closeLesson()">✕ Fechar</button>
+    </div>
+    <div class="phrases-list" id="phrasesList"></div>
+    <button class="quiz-btn" onclick="startQuiz()">🎯 Fazer Quiz</button>
+    <div class="quiz-box" id="quizBox">
+      <h4 id="quizQuestion"></h4>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="progress" id="quizProgress"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 LinguaLearn · Feito com ❤️ para quem ama aprender</p>
+</footer>
+
+<script>
+const idiomas = [
+  {
+    nome: "Inglês", flag: "🇺🇸", code: "en-US", desc: "Idioma global",
+    frases: [
+      { original: "Hello, how are you?", tradução: "Olá, como você está?" },
+      { original: "My name is...", tradução: "Meu nome é..." },
+      { original: "Thank you very much", tradução: "Muito obrigado" },
+      { original: "Where is the bathroom?", tradução: "Onde fica o banheiro?" },
+      { original: "I would like a coffee", tradução: "Eu gostaria de um café" },
+      { original: "How much does it cost?", tradução: "Quanto custa?" },
+      { original: "I don't understand", tradução: "Eu não entendo" },
+      { original: "Can you help me?", tradução: "Você pode me ajudar?" },
+      { original: "Good morning", tradução: "Bom dia" },
+      { original: "See you later", tradução: "Até logo" }
+    ]
+  },
+  {
+    nome: "Espanhol", flag: "🇪🇸", code: "es-ES", desc: "Língua romance",
+    frases: [
+      { original: "Hola, ¿cómo estás?", tradução: "Olá, como você está?" },
+      { original: "Me llamo...", tradução: "Meu nome é..." },
+      { original: "Muchas gracias", tradução: "Muito obrigado" },
+      { original: "¿Dónde está el baño?", tradução: "Onde fica o banheiro?" },
+      { original: "Quisiera un café", tradução: "Eu gostaria de um café" },
+      { original: "¿Cuánto cuesta?", tradução: "Quanto custa?" },
+      { original: "No entiendo", tradução: "Eu não entendo" },
+      { original: "¿Puedes ayudarme?", tradução: "Você pode me ajudar?" },
+      { original: "Buenos días", tradução: "Bom dia" },
+      { original: "Hasta luego", tradução: "Até logo" }
+    ]
+  },
+  {
+    nome: "Francês", flag: "🇫🇷", code: "fr-FR", desc: "Idioma do amor",
+    frases: [
+      { original: "Bonjour, comment allez-vous?", tradução: "Olá, como vai?" },
+      { original: "Je m'appelle...", tradução: "Meu nome é..." },
+      { original: "Merci beaucoup", tradução: "Muito obrigado" },
+      { original: "Où sont les toilettes?", tradução: "Onde fica o banheiro?" },
+      { original: "Je voudrais un café", tradução: "Eu gostaria de um café" },
+      { original: "Combien ça coûte?", tradução: "Quanto custa?" },
+      { original: "Je ne comprends pas", tradução: "Eu não entendo" },
+      { original: "Pouvez-vous m'aider?", tradução: "Você pode me ajudar?" },
+      { original: "Bonjour", tradução: "Bom dia" },
+      { original: "À bientôt", tradução: "Até logo" }
+    ]
+  },
+  {
+    nome: "Alemão", flag: "🇩🇪", code: "de-DE", desc: "Língua germânica",
+    frases: [
+      { original: "Hallo, wie geht es dir?", tradução: "Olá, como vai?" },
+      { original: "Ich heiße...", tradução: "Meu nome é..." },
+      { original: "Vielen Dank", tradução: "Muito obrigado" },
+      { original: "Wo ist die Toilette?", tradução: "Onde fica o banheiro?" },
+      { original: "Ich möchte einen Kaffee", tradução: "Eu gostaria de um café" },
+      { original: "Wie viel kostet das?", tradução: "Quanto custa?" },
+      { original: "Ich verstehe nicht", tradução: "Eu não entendo" },
+      { original: "Können Sie mir helfen?", tradução: "Pode me ajudar?" },
+      { original: "Guten Morgen", tradução: "Bom dia" },
+      { original: "Bis später", tradução: "Até logo" }
+    ]
+  },
+  {
+    nome: "Italiano", flag: "🇮🇹", code: "it-IT", desc: "Idioma da música",
+    frases: [
+      { original: "Ciao, come stai?", tradução: "Olá, como vai?" },
+      { original: "Mi chiamo...", tradução: "Meu nome é..." },
+      { original: "Grazie mille", tradução: "Muito obrigado" },
+      { original: "Dov'è il bagno?", tradução: "Onde fica o banheiro?" },
+      { original: "Vorrei un caffè", tradução: "Eu gostaria de um café" },
+      { original: "Quanto costa?", tradução: "Quanto custa?" },
+      { original: "Non capisco", tradução: "Eu não entendo" },
+      { original: "Puoi aiutarmi?", tradução: "Pode me ajudar?" },
+      { original: "Buongiorno", tradução: "Bom dia" },
+      { original: "A dopo", tradução: "Até logo" }
+    ]
+  },
+  {
+    nome: "Japonês", flag: "🇯🇵", code: "ja-JP", desc: "Idioma do sol nascente",
+    frases: [
+      { original: "こんにちは (Konnichiwa)", tradução: "Olá" },
+      { original: "私の名前は... (Watashi no namae wa...)", tradução: "Meu nome é..." },
+      { original: "ありがとう (Arigatou)", tradução: "Obrigado" },
+      { original: "トイレはどこですか？(Toire wa doko desu ka?)", tradução: "Onde fica o banheiro?" },
+      { original: "コーヒーをください (Koohii o kudasai)", tradução: "Um café, por favor" },
+      { original: "いくらですか？(Ikura desu ka?)", tradução: "Quanto custa?" },
+      { original: "わかりません (Wakarimasen)", tradução: "Eu não entendo" },
+      { original: "助けてもらえますか？(Tasukete moraemasu ka?)", tradução: "Pode me ajudar?" },
+      { original: "おはよう (Ohayou)", tradução: "Bom dia" },
+      { original: "またね (Mata ne)", tradução: "Até logo" }
+    ]
+  }
+];
+
+let idiomaAtual = null;
+let quizIndex = 0;
+let quizAcertos = 0;
+
+function renderIdiomas() {
+  const grid = document.getElementById('idiomas');
+  grid.innerHTML = idiomas.map((idioma, i) => `
+    <div class="lang-card" onclick="abrirIdioma(${i})">
+      <div class="flag">${idioma.flag}</div>
+      <h3>${idioma.nome}</h3>
+      <p>${idioma.desc}</p>
+    </div>
+  `).join('');
+}
+
+function abrirIdioma(i) {
+  idiomaAtual = idiomas[i];
+  document.getElementById('lessonTitle').textContent = `${idiomaAtual.flag} ${idiomaAtual.nome}`;
+  const list = document.getElementById('phrasesList');
+  list.innerHTML = idiomaAtual.frases.map((f, idx) => `
+    <div class="phrase">
+      <div class="phrase-text">
+        <span class="original">${f.original}</span>
+        <span class="translation">${f.tradução}</span>
+      </div>
+      <button class="btn-speak" onclick="falar('${f.original.replace(/'/g, "\\'")}')">🔊</button>
+    </div>
+  `).join('');
+  document.getElementById('lesson').classList.add('active');
+  document.getElementById('quizBox').classList.remove('active');
+  document.getElementById('lesson').scrollIntoView({ behavior: 'smooth' });
+}
+
+function falar(texto) {
+  if (!('speechSynthesis' in window)) {
+    alert('Seu navegador não suporta síntese de voz.');
+    return;
+  }
+  // Remove romanização entre parênteses para japonês
+  const limpo = texto.replace(/\s*\(.*?\)\s*/g, '').trim();
+  const utter = new SpeechSynthesisUtterance(limpo);
+  utter.lang = idiomaAtual.code;
+  utter.rate = 0.9;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
+}
+
+function closeLesson() {
+  document.getElementById('lesson').classList.remove('active');
+}
+
+function startQuiz() {
+  quizIndex = 0;
+  quizAcertos = 0;
+  document.getElementById('quizBox').classList.add('active');
+  proximaPergunta();
+}
+
+function proximaPergunta() {
+  if (quizIndex >= 5) {
+    document.getElementById('quizQuestion').textContent = `🎉 Quiz concluído! Acertos: ${quizAcertos}/5`;
+    document.getElementById('quizOptions').innerHTML = '';
+    document.getElementById('quizProgress').textContent = quizAcertos >= 4 ? 'Excelente!' : 'Continue praticando!';
+    return;
+  }
+
+  const frase = idiomaAtual.frases[Math.floor(Math.random() * idiomaAtual.frases.length)];
+  const correta = frase.tradução;
+  const opcoes = [correta];
+  
+  while (opcoes.length < 4) {
+    const aleatoria = idiomaAtual.frases[Math.floor(Math.random() * idiomaAtual.frases.length)].tradução;
+    if (!opcoes.includes(aleatoria)) opcoes.push(aleatoria);
+  }
+  opcoes.sort(() => Math.random() - 0.5);
+
+  document.getElementById('quizQuestion').textContent = `O que significa: "${frase.original}"?`;
+  document.getElementById('quizProgress').textContent = `Pergunta ${quizIndex + 1} de 5`;
+
+  document.getElementById('quizOptions').innerHTML = opcoes.map(op => `
+    <button class="quiz-opt" onclick="responder(this, '${op.replace(/'/g, "\\'")}', '${correta.replace(/'/g, "\\'")}')">${op}</button>
+  `).join('');
+}
+
+function responder(btn, escolha, correta) {
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.disabled = true);
+
+  if (escolha === correta) {
+    btn.classList.add('correct');
+    quizAcertos++;
+  } else {
+    btn.classList.add('wrong');
+    opts.forEach(o => {
+      if (o.textContent === correta) o.classList.add('correct');
+    });
+  }
+
+  quizIndex++;
+  setTimeout(proximaPergunta, 1200);
+}
+
+function resetAll() {
+  closeLesson();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Inicializa
+renderIdiomas();
+</script>
+</body>
+</html>
