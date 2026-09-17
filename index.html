@@ -3,419 +3,332 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#58cc02">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>LinguaLearn 🦉</title>
+<link rel="manifest" href="data:application/json,{%22name%22:%22LinguaLearn%22,%22short_name%22:%22LinguaLearn%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%2358cc02%22,%22theme_color%22:%22%2358cc02%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ctext%20y%3D%2780%27%20font-size%3D%2780%27%3E%F0%9F%A6%89%3C%2Ftext%3E%3C%2Fsvg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
   
   :root {
-    --green: #58cc02;
-    --green-dark: #46a302;
-    --blue: #1cb0f6;
-    --blue-dark: #1899d6;
-    --red: #ff4b4b;
-    --red-dark: #ea2b2b;
-    --yellow: #ffc800;
-    --purple: #ce82ff;
-    --gray: #e5e5e5;
-    --gray-dark: #afafaf;
-    --text: #4b4b4b;
-    --bg: #fff;
+    --green: #58cc02; --green-dark: #46a302; --green-light: #d7ffb8;
+    --blue: #1cb0f6; --blue-dark: #1899d6;
+    --red: #ff4b4b; --red-dark: #ea2b2b; --red-light: #ffdfe0;
+    --yellow: #ffc800; --yellow-dark: #e5b300; --yellow-light: #fff4cc;
+    --purple: #ce82ff; --purple-dark: #a568cc;
+    --orange: #ff9600;
+    --gray: #e5e5e5; --gray-mid: #afafaf; --gray-dark: #777;
+    --text: #3c3c3c; --text-light: #777;
+    --bg: #fff; --bg-alt: #f7f7f7;
+    --shadow: rgba(0,0,0,0.08);
   }
 
-  body {
+  [data-theme="dark"] {
+    --text: #f1f1f1; --text-light: #a0a0a0;
+    --bg: #131f24; --bg-alt: #1c2b33;
+    --gray: #37464f; --gray-mid: #52656d; --gray-dark: #8a9ba3;
+    --shadow: rgba(0,0,0,0.4);
+  }
+
+  html, body {
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
-    font-family: 'Segoe UI', sans-serif;
+    transition: background 0.3s, color 0.3s;
   }
 
-  /* ===== HEADER ===== */
+  /* =================== TOPBAR =================== */
   .topbar {
-    position: sticky;
-    top: 0;
-    background: white;
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg);
     border-bottom: 2px solid var(--gray);
-    padding: 0.75rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
-    gap: 1rem;
-  }
-
-  .topbar-left {
-    display: flex;
-    align-items: center;
+    padding: 0.7rem 1rem;
+    display: flex; justify-content: space-between; align-items: center;
     gap: 0.8rem;
-    cursor: pointer;
   }
-
+  .topbar-left { display: flex; align-items: center; gap: 0.7rem; }
   .back-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--gray-dark);
-    display: none;
+    background: none; border: none;
+    font-size: 1.4rem; cursor: pointer;
+    color: var(--gray-dark); padding: 0.3rem 0.5rem;
+    display: none; border-radius: 8px;
   }
   .back-btn.visible { display: block; }
+  .back-btn:hover { background: var(--bg-alt); }
 
-  .flag-badge {
-    font-size: 1.8rem;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+  .logo-mini {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-weight: 800; font-size: 1.1rem;
+    background: linear-gradient(135deg, var(--green), var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    cursor: pointer;
   }
 
-  .topbar-right {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
+  .topbar-right { display: flex; gap: 0.8rem; align-items: center; }
   .stat {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-weight: 700;
-    font-size: 1rem;
+    display: flex; align-items: center; gap: 0.25rem;
+    font-weight: 800; font-size: 0.95rem;
+    padding: 0.3rem 0.5rem; border-radius: 10px;
   }
   .stat.hearts { color: var(--red); }
-  .stat.streak { color: #ff9600; }
+  .stat.streak { color: var(--orange); }
+  .stat.gems { color: var(--blue); }
   .stat.xp { color: var(--yellow); }
+  .icon-btn {
+    background: none; border: none;
+    font-size: 1.3rem; cursor: pointer;
+    padding: 0.3rem; border-radius: 8px;
+  }
+  .icon-btn:hover { background: var(--bg-alt); }
 
-  /* ===== SCREENS ===== */
-  .screen { display: none; padding: 1.5rem; max-width: 600px; margin: 0 auto; }
-  .screen.active { display: block; animation: fadeIn 0.4s ease; }
+  /* =================== SCREENS =================== */
+  .screen { display: none; padding: 1.5rem 1rem; max-width: 640px; margin: 0 auto; }
+  .screen.active { display: block; animation: fadeIn 0.35s ease; }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ===== HOME ===== */
-  .hero {
-    text-align: center;
-    padding: 2rem 1rem 3rem;
-  }
-  .hero h1 {
-    font-size: 2.2rem;
-    margin-bottom: 0.5rem;
-    color: var(--green);
-    font-weight: 800;
-  }
-  .hero p {
-    color: var(--gray-dark);
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-  }
-  .mascot {
-    font-size: 6rem;
-    margin-bottom: 1rem;
-    animation: bounce 2s infinite;
+  /* =================== MASCOTE =================== */
+  .mascot-container {
+    width: 130px; height: 130px;
+    margin: 0 auto 1rem;
+    animation: bounce 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 8px 15px rgba(88,204,2,0.35));
   }
   @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-12px) rotate(2deg); }
   }
+  .mascot-container svg { width: 100%; height: 100%; }
+
+  /* =================== HOME =================== */
+  .hero { text-align: center; padding: 1.5rem 0.5rem 2rem; }
+  .hero h1 {
+    font-size: 2rem; margin-bottom: 0.4rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--green), var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p { color: var(--text-light); font-size: 1rem; margin-bottom: 1.5rem; }
 
   .lang-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem;
   }
-
   .lang-btn {
-    background: white;
-    border: 2px solid var(--gray);
-    border-radius: 16px;
-    padding: 1.5rem 1rem;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-    box-shadow: 0 4px 0 var(--gray);
-    position: relative;
+    background: var(--bg); border: 2px solid var(--gray);
+    border-radius: 18px; padding: 1.3rem 0.8rem;
+    cursor: pointer; text-align: center;
+    transition: all 0.15s; box-shadow: 0 4px 0 var(--gray);
+    position: relative; color: var(--text);
   }
-  .lang-btn:hover {
-    transform: translateY(-2px);
-    border-color: var(--blue);
-    box-shadow: 0 4px 0 var(--blue);
-  }
-  .lang-btn:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 var(--gray);
-  }
-  .lang-btn .flag { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
-  .lang-btn .name { font-weight: 700; color: var(--text); font-size: 1rem; }
+  .lang-btn:hover { transform: translateY(-2px); border-color: var(--blue); box-shadow: 0 4px 0 var(--blue); }
+  .lang-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--gray); }
+  .lang-btn .flag { font-size: 2.6rem; display: block; margin-bottom: 0.4rem; }
+  .lang-btn .name { font-weight: 800; font-size: 1.05rem; }
   .lang-btn .progress-mini {
-    font-size: 0.75rem;
-    color: var(--gray-dark);
-    margin-top: 0.3rem;
+    font-size: 0.72rem; color: var(--text-light);
+    margin-top: 0.4rem; font-weight: 600;
+  }
+  .lang-btn .crown-badge {
+    position: absolute; top: -8px; right: -8px;
+    background: var(--yellow); color: #7a5c00;
+    font-size: 0.75rem; font-weight: 800;
+    padding: 0.2rem 0.5rem; border-radius: 20px;
+    border: 2px solid var(--bg);
   }
 
-  /* ===== TRILHA ===== */
-  .trail {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.5rem 0 4rem;
-    position: relative;
+  /* =================== TRILHA =================== */
+  .trail-header {
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    color: white; border-radius: 20px;
+    padding: 1.5rem; margin-bottom: 1.5rem;
+    box-shadow: 0 8px 20px rgba(88,204,2,0.3);
   }
+  .trail-header h2 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+  .trail-header p { opacity: 0.9; font-size: 0.9rem; }
+  .trail-header .stats-row {
+    display: flex; gap: 1rem; margin-top: 1rem;
+    padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2);
+  }
+  .trail-header .stats-row div { flex: 1; text-align: center; }
+  .trail-header .stats-row strong { display: block; font-size: 1.2rem; }
+  .trail-header .stats-row span { font-size: 0.75rem; opacity: 0.85; }
 
+  .trail { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; padding: 1rem 0 4rem; }
   .lesson-node {
-    width: 82px;
-    height: 82px;
-    border-radius: 50%;
-    background: var(--gray);
-    border: none;
-    color: white;
-    font-size: 1.8rem;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: 0 6px 0 var(--gray-dark);
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+    width: 76px; height: 76px; border-radius: 50%;
+    background: var(--gray); border: none;
+    color: white; font-size: 1.6rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 6px 0 var(--gray-mid);
+    transition: all 0.15s; position: relative;
+    display: flex; align-items: center; justify-content: center;
   }
-  .lesson-node.unlocked {
-    background: var(--green);
-    box-shadow: 0 6px 0 var(--green-dark);
-  }
-  .lesson-node.unlocked:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.05);
-  }
-  .lesson-node.unlocked:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 var(--green-dark);
-  }
-  .lesson-node.completed {
-    background: var(--yellow);
-    box-shadow: 0 6px 0 #e5b300;
-  }
-  .lesson-node.locked {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
+  .lesson-node.unlocked { background: var(--green); box-shadow: 0 6px 0 var(--green-dark); }
+  .lesson-node.unlocked:hover { transform: translateY(-2px); filter: brightness(1.05); }
+  .lesson-node.unlocked:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--green-dark); }
+  .lesson-node.completed { background: var(--yellow); box-shadow: 0 6px 0 var(--yellow-dark); color: #7a5c00; }
+  .lesson-node.locked { cursor: not-allowed; opacity: 0.55; }
   .node-offset-1 { transform: translateX(-40px); }
   .node-offset-2 { transform: translateX(40px); }
-
   .node-label {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 0.3rem;
-    font-size: 0.7rem;
-    color: var(--gray-dark);
-    font-weight: 700;
-    white-space: nowrap;
+    position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%); margin-top: 0.3rem;
+    font-size: 0.68rem; color: var(--text-light);
+    font-weight: 800; white-space: nowrap;
+  }
+  .node-xp-badge {
+    position: absolute; top: -6px; right: -6px;
+    background: var(--purple); color: white;
+    font-size: 0.65rem; font-weight: 800;
+    padding: 0.15rem 0.4rem; border-radius: 20px;
+    border: 2px solid var(--bg);
   }
 
-  /* ===== LIÇÃO ===== */
+  /* =================== LIÇÃO =================== */
   .lesson-screen {
-    padding: 0 !important;
-    max-width: 100% !important;
-    display: none;
-    flex-direction: column;
-    min-height: 100vh;
-    background: white;
+    padding: 0 !important; max-width: 100% !important;
+    display: none; flex-direction: column; min-height: 100vh;
+    background: var(--bg);
   }
   .lesson-screen.active { display: flex; }
-
   .lesson-progress-bar {
-    height: 16px;
-    background: var(--gray);
-    border-radius: 10px;
-    margin: 1rem 1rem 0;
+    height: 14px; background: var(--gray);
+    border-radius: 10px; margin: 1rem 1rem 0;
     overflow: hidden;
-    position: relative;
   }
   .lesson-progress-fill {
-    height: 100%;
-    background: var(--green);
-    border-radius: 10px;
-    transition: width 0.4s ease;
-    position: relative;
+    height: 100%; background: linear-gradient(90deg, var(--green), #7fe02f);
+    border-radius: 10px; transition: width 0.4s ease;
   }
-  .lesson-progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: 6px;
-    right: 6px;
-    height: 4px;
-    background: rgba(255,255,255,0.4);
-    border-radius: 2px;
-  }
-
   .lesson-content {
-    flex: 1;
-    padding: 2rem 1.5rem;
-    max-width: 600px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .lesson-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    color: var(--text);
+    flex: 1; padding: 1.5rem 1.2rem;
+    max-width: 600px; margin: 0 auto; width: 100%;
   }
   .lesson-sub {
-    color: var(--gray-dark);
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
+    color: var(--text-light); font-size: 0.85rem;
+    margin-bottom: 1rem; font-weight: 600;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .lesson-sub .combo-badge {
+    background: linear-gradient(135deg, var(--orange), var(--red));
+    color: white; padding: 0.15rem 0.5rem; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 800;
+    animation: pulse 0.5s;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); }
   }
 
-  /* ==== EXERCÍCIOS ==== */
   .exercise-prompt {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
+    font-size: 1.15rem; font-weight: 800;
+    margin-bottom: 1.2rem; color: var(--text);
+    display: flex; align-items: center; gap: 0.5rem;
   }
+  .exercise-prompt .icon { font-size: 1.4rem; }
 
   .audio-btn-big {
-    background: var(--blue);
-    color: white;
-    border: none;
-    width: 90px;
-    height: 90px;
-    border-radius: 20px;
-    font-size: 2.2rem;
-    cursor: pointer;
+    background: var(--blue); color: white; border: none;
+    width: 100px; height: 100px; border-radius: 22px;
+    font-size: 2.4rem; cursor: pointer;
     box-shadow: 0 5px 0 var(--blue-dark);
-    transition: all 0.15s;
-    display: block;
-    margin: 0 auto 2rem;
+    transition: all 0.15s; display: block; margin: 0 auto 1rem;
   }
   .audio-btn-big:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--blue-dark); }
-
-  .options {
-    display: grid;
-    gap: 0.9rem;
+  .audio-btn-big.playing { animation: pulse-audio 0.6s infinite; }
+  @keyframes pulse-audio {
+    0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
   }
 
+  .options { display: grid; gap: 0.8rem; }
   .option {
-    background: white;
-    border: 2px solid var(--gray);
-    border-radius: 14px;
-    padding: 1rem 1.2rem;
-    cursor: pointer;
-    text-align: left;
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: var(--text);
-    box-shadow: 0 4px 0 var(--gray);
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
+    background: var(--bg); border: 2px solid var(--gray);
+    border-radius: 14px; padding: 1rem 1.1rem;
+    cursor: pointer; text-align: left;
+    font-size: 1rem; font-weight: 600;
+    color: var(--text); box-shadow: 0 4px 0 var(--gray);
+    transition: all 0.15s; display: flex; align-items: center; gap: 0.7rem;
   }
   .option .num {
-    background: white;
-    border: 2px solid var(--gray);
-    border-radius: 8px;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--gray-dark);
-    flex-shrink: 0;
+    background: var(--bg-alt); border: 2px solid var(--gray);
+    border-radius: 8px; width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 800;
+    color: var(--gray-dark); flex-shrink: 0;
   }
-  .option:hover:not(:disabled) {
-    border-color: var(--blue);
-    background: #f0f9ff;
-  }
-  .option:active:not(:disabled) {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 var(--gray);
-  }
-  .option.correct {
-    background: #d7ffb8;
-    border-color: var(--green);
-    color: var(--green-dark);
-  }
+  .option:hover:not(:disabled) { border-color: var(--blue); background: var(--bg-alt); }
+  .option:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--gray); }
+  .option.correct { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
   .option.correct .num { border-color: var(--green); color: var(--green-dark); }
-  .option.wrong {
-    background: #ffdfe0;
-    border-color: var(--red);
-    color: var(--red-dark);
-  }
+  .option.wrong { background: var(--red-light); border-color: var(--red); color: var(--red-dark); }
   .option.wrong .num { border-color: var(--red); color: var(--red-dark); }
   .option:disabled { cursor: default; }
 
-  /* Word bank (montar frase) */
+  /* Word bank */
   .word-bank-area {
-    min-height: 60px;
-    border-bottom: 2px solid var(--gray);
-    border-top: 2px solid var(--gray);
-    padding: 1rem 0;
-    margin-bottom: 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-content: flex-start;
+    min-height: 66px; border-bottom: 2px solid var(--gray);
+    border-top: 2px solid var(--gray); padding: 0.8rem 0;
+    margin-bottom: 1.2rem; display: flex; flex-wrap: wrap;
+    gap: 0.5rem; align-content: flex-start;
   }
-  .word-bank {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-  }
+  .word-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
   .word-chip {
-    background: white;
-    border: 2px solid var(--gray);
-    border-radius: 12px;
-    padding: 0.6rem 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 3px 0 var(--gray);
-    color: var(--text);
-    transition: all 0.15s;
+    background: var(--bg); border: 2px solid var(--gray);
+    border-radius: 12px; padding: 0.55rem 0.9rem;
+    font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; box-shadow: 0 3px 0 var(--gray);
+    color: var(--text); transition: all 0.15s;
   }
   .word-chip:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--gray); }
-  .word-chip.used { opacity: 0.3; pointer-events: none; }
-  .word-chip.placed {
-    background: #e6f4ff;
-    border-color: var(--blue);
-    color: var(--blue-dark);
-    box-shadow: 0 3px 0 var(--blue);
+  .word-chip.used { opacity: 0.25; pointer-events: none; }
+  .word-chip.placed { background: #e6f4ff; border-color: var(--blue); color: var(--blue-dark); box-shadow: 0 3px 0 var(--blue); }
+  [data-theme="dark"] .word-chip.placed { background: #143a4d; }
+
+  /* Input (digitar) */
+  .type-input {
+    width: 100%; padding: 1rem;
+    border: 2px solid var(--gray); border-radius: 14px;
+    font-size: 1rem; font-weight: 600;
+    background: var(--bg); color: var(--text);
+    box-shadow: 0 4px 0 var(--gray);
+    outline: none;
+  }
+  .type-input:focus { border-color: var(--blue); }
+  .type-input.correct { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
+  .type-input.wrong { background: var(--red-light); border-color: var(--red); color: var(--red-dark); }
+
+  /* Match (associar pares) */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .match-item {
+    background: var(--bg); border: 2px solid var(--gray);
+    border-radius: 12px; padding: 0.8rem;
+    cursor: pointer; font-weight: 600; font-size: 0.95rem;
+    text-align: center; box-shadow: 0 3px 0 var(--gray);
+    transition: all 0.15s; color: var(--text);
+  }
+  .match-item:hover:not(.matched) { border-color: var(--blue); }
+  .match-item.selected { border-color: var(--purple); background: #f3e8ff; color: var(--purple-dark); }
+  [data-theme="dark"] .match-item.selected { background: #2d1b47; }
+  .match-item.matched {
+    background: var(--green-light); border-color: var(--green);
+    color: var(--green-dark); opacity: 0.5;
+    pointer-events: none; transform: scale(0.95);
   }
 
-  /* ===== FOOTER DA LIÇÃO ===== */
+  /* =================== FOOTER LIÇÃO =================== */
   .lesson-footer {
     border-top: 2px solid var(--gray);
-    padding: 1rem 1.5rem;
-    background: white;
-    position: sticky;
-    bottom: 0;
+    padding: 1rem 1.2rem; background: var(--bg);
+    position: sticky; bottom: 0;
   }
   .lesson-footer-inner {
-    max-width: 600px;
-    margin: 0 auto;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+    max-width: 600px; margin: 0 auto;
+    display: flex; gap: 1rem; align-items: center;
     justify-content: space-between;
   }
-
   .feedback-box {
-    flex: 1;
-    display: none;
-    align-items: center;
-    gap: 0.8rem;
+    flex: 1; display: none; align-items: center; gap: 0.7rem;
     animation: slideUp 0.3s ease;
   }
   @keyframes slideUp {
@@ -424,161 +337,235 @@
   }
   .feedback-box.correct { color: var(--green-dark); }
   .feedback-box.wrong { color: var(--red-dark); }
-  .feedback-icon { font-size: 2rem; }
-  .feedback-text { font-weight: 800; font-size: 1.1rem; }
-  .feedback-sub { font-size: 0.85rem; opacity: 0.8; font-weight: 500; }
+  .feedback-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .feedback-text { font-weight: 800; font-size: 1rem; }
+  .feedback-sub { font-size: 0.82rem; opacity: 0.85; font-weight: 600; }
 
   .btn {
-    border: none;
-    border-radius: 14px;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: white;
-    min-width: 140px;
+    border: none; border-radius: 14px;
+    padding: 0.9rem 1.6rem;
+    font-size: 0.95rem; font-weight: 800;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.15s;
+    color: white; min-width: 130px;
   }
-  .btn-primary {
-    background: var(--green);
-    box-shadow: 0 4px 0 var(--green-dark);
-  }
+  .btn-primary { background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
   .btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--green-dark); }
-  .btn-primary:disabled {
-    background: var(--gray);
-    box-shadow: 0 4px 0 var(--gray-dark);
-    color: var(--gray-dark);
-    cursor: not-allowed;
-  }
-  .btn-danger {
-    background: var(--red);
-    box-shadow: 0 4px 0 var(--red-dark);
-  }
+  .btn-primary:disabled { background: var(--gray); box-shadow: 0 4px 0 var(--gray-mid); color: var(--gray-dark); cursor: not-allowed; }
+  .btn-danger { background: var(--red); box-shadow: 0 4px 0 var(--red-dark); }
   .btn-danger:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--red-dark); }
   .btn-secondary {
-    background: white;
-    color: var(--gray-dark);
-    border: 2px solid var(--gray);
-    box-shadow: 0 4px 0 var(--gray);
+    background: var(--bg); color: var(--gray-dark);
+    border: 2px solid var(--gray); box-shadow: 0 4px 0 var(--gray);
   }
+  .btn-secondary:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--gray); }
 
-  /* ===== MODAL RESULTADO ===== */
+  /* =================== MODAIS =================== */
   .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-    animation: fadeIn 0.3s;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1000; padding: 1rem;
+    animation: fadeIn 0.25s; backdrop-filter: blur(4px);
   }
   .modal-overlay.active { display: flex; }
-
   .modal {
-    background: white;
-    border-radius: 24px;
-    padding: 2rem;
-    max-width: 420px;
-    width: 100%;
+    background: var(--bg); border-radius: 24px;
+    padding: 2rem 1.5rem; max-width: 420px; width: 100%;
     text-align: center;
-    animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    animation: popIn 0.45s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    max-height: 90vh; overflow-y: auto;
   }
   @keyframes popIn {
     from { transform: scale(0.7); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
   }
-  .modal h2 {
-    font-size: 1.8rem;
-    color: var(--yellow);
-    margin-bottom: 0.5rem;
-  }
-  .modal .stats-row {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-  }
-  .modal .stat-card {
-    flex: 1;
-    padding: 1rem;
-    border-radius: 14px;
-    border: 2px solid var(--gray);
-  }
+  .modal h2 { font-size: 1.6rem; color: var(--yellow); margin-bottom: 0.4rem; font-weight: 800; }
+  .modal .stats-row { display: flex; justify-content: center; gap: 0.8rem; margin: 1.3rem 0; }
+  .modal .stat-card { flex: 1; padding: 0.9rem 0.5rem; border-radius: 14px; border: 2px solid var(--gray); }
   .modal .stat-card .label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: var(--gray-dark);
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    font-size: 0.68rem; text-transform: uppercase;
+    color: var(--text-light); font-weight: 800; letter-spacing: 0.5px;
   }
-  .modal .stat-card .value {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin-top: 0.3rem;
-  }
+  .modal .stat-card .value { font-size: 1.4rem; font-weight: 800; margin-top: 0.3rem; }
   .modal .stat-card.xp .value { color: var(--yellow); }
   .modal .stat-card.acc .value { color: var(--green); }
-  .modal .btn { width: 100%; margin-top: 0.5rem; }
+  .modal .stat-card.combo .value { color: var(--orange); }
+  .modal .btn { width: 100%; margin-top: 0.6rem; }
 
-  /* ===== GAME OVER ===== */
-  .gameover-icon { font-size: 5rem; margin-bottom: 1rem; }
-
-  /* ===== RESPONSIVO ===== */
-  @media (max-width: 500px) {
-    .hero h1 { font-size: 1.8rem; }
-    .mascot { font-size: 5rem; }
-    .lesson-node { width: 72px; height: 72px; font-size: 1.5rem; }
+  /* Conquistas no modal */
+  .achievements-list {
+    display: flex; flex-direction: column; gap: 0.5rem;
+    margin: 1rem 0; text-align: left;
   }
+  .achievement-toast {
+    display: flex; align-items: center; gap: 0.7rem;
+    background: var(--yellow-light); border: 2px solid var(--yellow);
+    border-radius: 12px; padding: 0.7rem 0.9rem;
+    animation: slideIn 0.5s;
+  }
+  [data-theme="dark"] .achievement-toast { background: #3d3100; }
+  @keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  .achievement-toast .emoji { font-size: 1.8rem; }
+  .achievement-toast .info strong { display: block; font-size: 0.9rem; color: var(--text); }
+  .achievement-toast .info span { font-size: 0.75rem; color: var(--text-light); }
 
-  /* ===== ANIMAÇÕES DE COMEMORAÇÃO ===== */
+  /* =================== PERFIL / CONQUISTAS =================== */
+  .profile-header {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.7rem; padding: 1.5rem 0;
+  }
+  .avatar {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; box-shadow: 0 8px 20px rgba(88,204,2,0.3);
+  }
+  .profile-header h2 { font-size: 1.4rem; }
+  .profile-header p { color: var(--text-light); font-size: 0.9rem; }
+
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem; margin-bottom: 1.5rem;
+  }
+  .stat-box {
+    background: var(--bg-alt); border-radius: 14px;
+    padding: 1rem; text-align: center;
+  }
+  .stat-box .emoji { font-size: 1.8rem; }
+  .stat-box .val { font-size: 1.4rem; font-weight: 800; color: var(--text); margin-top: 0.2rem; }
+  .stat-box .lbl { font-size: 0.75rem; color: var(--text-light); font-weight: 700; text-transform: uppercase; }
+
+  .achievements-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 0.7rem;
+  }
+  .achievement-card {
+    background: var(--bg-alt); border-radius: 14px;
+    padding: 0.9rem 0.5rem; text-align: center;
+    border: 2px solid transparent; transition: all 0.2s;
+  }
+  .achievement-card.unlocked {
+    background: linear-gradient(135deg, var(--yellow-light), #fff5cc);
+    border-color: var(--yellow);
+  }
+  [data-theme="dark"] .achievement-card.unlocked { background: #3d3100; }
+  .achievement-card .emoji { font-size: 1.8rem; filter: grayscale(1); opacity: 0.4; }
+  .achievement-card.unlocked .emoji { filter: none; opacity: 1; }
+  .achievement-card .name { font-size: 0.7rem; font-weight: 700; margin-top: 0.3rem; color: var(--text); }
+  .achievement-card .desc { font-size: 0.62rem; color: var(--text-light); margin-top: 0.15rem; }
+
+  /* =================== LIGAS =================== */
+  .league-banner {
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white; border-radius: 20px;
+    padding: 1.3rem; text-align: center; margin-bottom: 1rem;
+  }
+  .league-banner .trophy { font-size: 3rem; }
+  .league-banner h3 { margin: 0.3rem 0; font-size: 1.3rem; }
+  .leaderboard {
+    background: var(--bg-alt); border-radius: 16px;
+    padding: 0.5rem; margin-bottom: 1rem;
+  }
+  .lb-row {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.7rem 0.9rem; border-radius: 12px;
+    margin-bottom: 0.3rem;
+  }
+  .lb-row.me { background: var(--green-light); border: 2px solid var(--green); }
+  [data-theme="dark"] .lb-row.me { background: #1e3d0e; }
+  .lb-row .rank { font-weight: 800; color: var(--text-light); width: 24px; }
+  .lb-row .avatar-mini {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+  .lb-row .name { flex: 1; font-weight: 700; font-size: 0.9rem; }
+  .lb-row .xp { color: var(--yellow); font-weight: 800; font-size: 0.9rem; }
+
+  /* =================== BOTTOM NAV =================== */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg); border-top: 2px solid var(--gray);
+    display: none; justify-content: space-around;
+    padding: 0.5rem 0; z-index: 99;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  }
+  .bottom-nav.visible { display: flex; }
+  .nav-item {
+    background: none; border: none; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.15rem; padding: 0.4rem 1rem; border-radius: 12px;
+    color: var(--gray-dark); font-size: 0.68rem; font-weight: 700;
+    transition: all 0.2s;
+  }
+  .nav-item .emoji { font-size: 1.5rem; }
+  .nav-item.active { color: var(--green); }
+  .nav-item:hover { background: var(--bg-alt); }
+
+  /* =================== UTILS =================== */
   .confetti {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    background: var(--yellow);
-    animation: confetti-fall 2s linear forwards;
-    z-index: 9999;
-    pointer-events: none;
+    position: fixed; width: 10px; height: 10px;
+    animation: confetti-fall linear forwards;
+    z-index: 9999; pointer-events: none; border-radius: 2px;
   }
   @keyframes confetti-fall {
     0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
-
-  /* Shake */
   .shake { animation: shake 0.5s; }
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-8px); }
     75% { transform: translateX(8px); }
   }
-
   .hidden { display: none !important; }
+  .text-center { text-align: center; }
+
+  /* Animação de estrela no acerto */
+  .star-burst {
+    position: fixed; pointer-events: none;
+    font-size: 2rem; z-index: 9998;
+    animation: starFly 1s ease-out forwards;
+  }
+  @keyframes starFly {
+    0% { transform: translate(0,0) scale(0.5); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(1.5); opacity: 0; }
+  }
+
+  @media (max-width: 500px) {
+    .hero h1 { font-size: 1.6rem; }
+    .lesson-node { width: 68px; height: 68px; font-size: 1.4rem; }
+    .topbar-right .stat { font-size: 0.85rem; padding: 0.2rem 0.35rem; }
+  }
 </style>
 </head>
-<body>
+<body data-theme="light">
 
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-left">
     <button class="back-btn" id="backBtn" onclick="goBack()">←</button>
-    <span class="flag-badge" id="flagBadge">🦉</span>
+    <div class="logo-mini" onclick="irParaHome()">
+      <span>🦉</span><span>LinguaLearn</span>
+    </div>
   </div>
   <div class="topbar-right">
-    <div class="stat streak">🔥 <span id="streakVal">0</span></div>
-    <div class="stat xp">⚡ <span id="xpVal">0</span></div>
-    <div class="stat hearts">❤️ <span id="heartsVal">5</span></div>
+    <div class="stat streak" title="Sequência diária">🔥 <span id="streakVal">0</span></div>
+    <div class="stat hearts" title="Corações">❤️ <span id="heartsVal">5</span></div>
+    <div class="stat gems" title="Gemas">💎 <span id="gemsVal">0</span></div>
+    <button class="icon-btn" onclick="toggleTheme()" title="Tema">🌙</button>
   </div>
 </div>
 
 <!-- HOME -->
 <div class="screen active" id="homeScreen">
   <div class="hero">
-    <div class="mascot">🦉</div>
+    <div class="mascot-container" id="mascotHome"></div>
     <h1>Aprenda idiomas de graça</h1>
     <p>Divirta-se e ganhe XP todos os dias!</p>
   </div>
@@ -587,9 +574,26 @@
 
 <!-- TRILHA -->
 <div class="screen" id="trailScreen">
-  <h2 style="text-align:center; margin-bottom: 0.5rem;" id="trailTitle"></h2>
-  <p style="text-align:center; color: var(--gray-dark); margin-bottom: 1.5rem;" id="trailSub"></p>
+  <div class="trail-header" id="trailHeader"></div>
   <div class="trail" id="trail"></div>
+</div>
+
+<!-- PERFIL -->
+<div class="screen" id="profileScreen">
+  <div class="profile-header">
+    <div class="avatar">🦉</div>
+    <h2 id="profileName">Aprendiz</h2>
+    <p id="profileSub">Comece a aprender hoje!</p>
+  </div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <h3 style="margin-bottom: 0.8rem; font-size: 1.1rem;">🏆 Conquistas</h3>
+  <div class="achievements-grid" id="achievementsGrid"></div>
+</div>
+
+<!-- LIGA -->
+<div class="screen" id="leagueScreen">
+  <div class="league-banner" id="leagueBanner"></div>
+  <div class="leaderboard" id="leaderboard"></div>
 </div>
 
 <!-- LIÇÃO -->
@@ -612,33 +616,81 @@
   </div>
 </div>
 
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottomNav">
+  <button class="nav-item" onclick="irParaHome()" id="navHome">
+    <span class="emoji">🏠</span>Início
+  </button>
+  <button class="nav-item" onclick="irParaPerfil()" id="navProfile">
+    <span class="emoji">👤</span>Perfil
+  </button>
+  <button class="nav-item" onclick="irParaLiga()" id="navLeague">
+    <span class="emoji">🏅</span>Liga
+  </button>
+</div>
+
 <!-- MODAL RESULTADO -->
 <div class="modal-overlay" id="resultModal">
   <div class="modal">
     <div id="resultIcon" style="font-size: 4rem;">🎉</div>
     <h2 id="resultTitle">Lição Completa!</h2>
-    <p style="color: var(--gray-dark);" id="resultSub">Você está arrasando!</p>
+    <p style="color: var(--text-light); font-size: 0.9rem;" id="resultSub">Você está arrasando!</p>
     <div class="stats-row">
-      <div class="stat-card xp">
-        <div class="label">XP</div>
-        <div class="value" id="resultXP">+30</div>
-      </div>
-      <div class="stat-card acc">
-        <div class="label">Precisão</div>
-        <div class="value" id="resultAcc">100%</div>
-      </div>
+      <div class="stat-card xp"><div class="label">XP</div><div class="value" id="resultXP">+30</div></div>
+      <div class="stat-card acc"><div class="label">Precisão</div><div class="value" id="resultAcc">100%</div></div>
+      <div class="stat-card combo"><div class="label">Combo</div><div class="value" id="resultCombo">x3</div></div>
     </div>
+    <div class="achievements-list" id="achievementsUnlocked"></div>
     <button class="btn btn-primary" onclick="closeResult()">Continuar</button>
   </div>
 </div>
 
 <script>
-/* =========================================================
-   DADOS - FRASES POR IDIOMA
-   ========================================================= */
+/* ================================================================
+   MASCOTE SVG (estilo Duo)
+   ================================================================ */
+const MASCOT_SVG = `
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bodyGrad" cx="50%" cy="30%">
+      <stop offset="0%" stop-color="#8ee23a"/>
+      <stop offset="100%" stop-color="#58cc02"/>
+    </radialGradient>
+  </defs>
+  <!-- corpo -->
+  <ellipse cx="100" cy="125" rx="58" ry="60" fill="url(#bodyGrad)"/>
+  <!-- cabeça -->
+  <circle cx="100" cy="80" r="52" fill="url(#bodyGrad)"/>
+  <!-- orelhas -->
+  <path d="M 60 45 Q 55 20 75 30 Z" fill="#4aab00"/>
+  <path d="M 140 45 Q 145 20 125 30 Z" fill="#4aab00"/>
+  <!-- olhos brancos -->
+  <ellipse cx="80" cy="80" rx="20" ry="22" fill="white"/>
+  <ellipse cx="120" cy="80" rx="20" ry="22" fill="white"/>
+  <!-- pupilas -->
+  <circle cx="82" cy="82" r="11" fill="#2d2d2d"/>
+  <circle cx="118" cy="82" r="11" fill="#2d2d2d"/>
+  <!-- brilho nos olhos -->
+  <circle cx="86" cy="78" r="4" fill="white"/>
+  <circle cx="122" cy="78" r="4" fill="white"/>
+  <!-- bico -->
+  <path d="M 92 96 L 108 96 L 100 108 Z" fill="#ffb700"/>
+  <!-- barriga -->
+  <ellipse cx="100" cy="140" rx="35" ry="38" fill="#e8ffcf" opacity="0.6"/>
+  <!-- pés -->
+  <ellipse cx="80" cy="182" rx="15" ry="6" fill="#ffb700"/>
+  <ellipse cx="120" cy="182" rx="15" ry="6" fill="#ffb700"/>
+  <!-- asa -->
+  <ellipse cx="45" cy="130" rx="12" ry="25" fill="#4aab00" transform="rotate(-15 45 130)"/>
+  <ellipse cx="155" cy="130" rx="12" ry="25" fill="#4aab00" transform="rotate(15 155 130)"/>
+</svg>`;
+
+/* ================================================================
+   DADOS - 6 IDIOMAS COM FRASES COMPLETAS
+   ================================================================ */
 const IDIOMAS = {
   en: {
-    nome: "Inglês", flag: "🇺🇸", code: "en-US",
+    nome: "Inglês", flag: "🇺🇸", code: "en-US", cor: "#1cb0f6",
     frases: [
       { pt: "Olá, como você está?", en: "Hello, how are you?" },
       { pt: "Meu nome é João", en: "My name is João" },
@@ -649,13 +701,25 @@ const IDIOMAS = {
       { pt: "Eu não entendo", en: "I don't understand" },
       { pt: "Você pode me ajudar?", en: "Can you help me?" },
       { pt: "Bom dia", en: "Good morning" },
+      { pt: "Boa noite", en: "Good night" },
       { pt: "Até logo", en: "See you later" },
       { pt: "Eu amo aprender", en: "I love learning" },
-      { pt: "Qual é o seu nome?", en: "What is your name?" }
+      { pt: "Qual é o seu nome?", en: "What is your name?" },
+      { pt: "De onde você é?", en: "Where are you from?" },
+      { pt: "Eu moro no Brasil", en: "I live in Brazil" },
+      { pt: "Eu tenho 25 anos", en: "I am 25 years old" },
+      { pt: "Eu gosto de música", en: "I like music" },
+      { pt: "Onde está o hotel?", en: "Where is the hotel?" },
+      { pt: "A conta, por favor", en: "The bill, please" },
+      { pt: "Bom apetite", en: "Enjoy your meal" },
+      { pt: "Eu estou aprendendo inglês", en: "I am learning English" },
+      { pt: "Você fala português?", en: "Do you speak Portuguese?" },
+      { pt: "Que horas são?", en: "What time is it?" },
+      { pt: "Hoje está um lindo dia", en: "Today is a beautiful day" }
     ]
   },
   es: {
-    nome: "Espanhol", flag: "🇪🇸", code: "es-ES",
+    nome: "Espanhol", flag: "🇪🇸", code: "es-ES", cor: "#ff9600",
     frases: [
       { pt: "Olá, como você está?", en: "Hola, ¿cómo estás?" },
       { pt: "Meu nome é João", en: "Me llamo João" },
@@ -666,13 +730,25 @@ const IDIOMAS = {
       { pt: "Eu não entendo", en: "No entiendo" },
       { pt: "Você pode me ajudar?", en: "¿Puedes ayudarme?" },
       { pt: "Bom dia", en: "Buenos días" },
+      { pt: "Boa noite", en: "Buenas noches" },
       { pt: "Até logo", en: "Hasta luego" },
       { pt: "Eu amo aprender", en: "Me encanta aprender" },
-      { pt: "Qual é o seu nome?", en: "¿Cómo te llamas?" }
+      { pt: "Qual é o seu nome?", en: "¿Cómo te llamas?" },
+      { pt: "De onde você é?", en: "¿De dónde eres?" },
+      { pt: "Eu moro no Brasil", en: "Vivo en Brasil" },
+      { pt: "Eu tenho 25 anos", en: "Tengo 25 años" },
+      { pt: "Eu gosto de música", en: "Me gusta la música" },
+      { pt: "Onde está o hotel?", en: "¿Dónde está el hotel?" },
+      { pt: "A conta, por favor", en: "La cuenta, por favor" },
+      { pt: "Bom apetite", en: "Buen provecho" },
+      { pt: "Eu estou aprendendo espanhol", en: "Estoy aprendiendo español" },
+      { pt: "Você fala português?", en: "¿Hablas portugués?" },
+      { pt: "Que horas são?", en: "¿Qué hora es?" },
+      { pt: "Hoje está um lindo dia", en: "Hoy es un hermoso día" }
     ]
   },
   fr: {
-    nome: "Francês", flag: "🇫🇷", code: "fr-FR",
+    nome: "Francês", flag: "🇫🇷", code: "fr-FR", cor: "#5c6bc0",
     frases: [
       { pt: "Olá, como você está?", en: "Bonjour, comment allez-vous?" },
       { pt: "Meu nome é João", en: "Je m'appelle João" },
@@ -683,13 +759,25 @@ const IDIOMAS = {
       { pt: "Eu não entendo", en: "Je ne comprends pas" },
       { pt: "Você pode me ajudar?", en: "Pouvez-vous m'aider?" },
       { pt: "Bom dia", en: "Bonjour" },
+      { pt: "Boa noite", en: "Bonne nuit" },
       { pt: "Até logo", en: "À bientôt" },
       { pt: "Eu amo aprender", en: "J'adore apprendre" },
-      { pt: "Qual é o seu nome?", en: "Comment tu t'appelles?" }
+      { pt: "Qual é o seu nome?", en: "Comment tu t'appelles?" },
+      { pt: "De onde você é?", en: "D'où venez-vous?" },
+      { pt: "Eu moro no Brasil", en: "J'habite au Brésil" },
+      { pt: "Eu tenho 25 anos", en: "J'ai 25 ans" },
+      { pt: "Eu gosto de música", en: "J'aime la musique" },
+      { pt: "Onde está o hotel?", en: "Où est l'hôtel?" },
+      { pt: "A conta, por favor", en: "L'addition, s'il vous plaît" },
+      { pt: "Bom apetite", en: "Bon appétit" },
+      { pt: "Eu estou aprendendo francês", en: "J'apprends le français" },
+      { pt: "Você fala português?", en: "Parlez-vous portugais?" },
+      { pt: "Que horas são?", en: "Quelle heure est-il?" },
+      { pt: "Hoje está um lindo dia", en: "Aujourd'hui est une belle journée" }
     ]
   },
   de: {
-    nome: "Alemão", flag: "🇩🇪", code: "de-DE",
+    nome: "Alemão", flag: "🇩🇪", code: "de-DE", cor: "#fbc02d",
     frases: [
       { pt: "Olá, como você está?", en: "Hallo, wie geht es dir?" },
       { pt: "Meu nome é João", en: "Ich heiße João" },
@@ -700,13 +788,25 @@ const IDIOMAS = {
       { pt: "Eu não entendo", en: "Ich verstehe nicht" },
       { pt: "Você pode me ajudar?", en: "Können Sie mir helfen?" },
       { pt: "Bom dia", en: "Guten Morgen" },
+      { pt: "Boa noite", en: "Gute Nacht" },
       { pt: "Até logo", en: "Bis später" },
       { pt: "Eu amo aprender", en: "Ich liebe es zu lernen" },
-      { pt: "Qual é o seu nome?", en: "Wie heißt du?" }
+      { pt: "Qual é o seu nome?", en: "Wie heißt du?" },
+      { pt: "De onde você é?", en: "Woher kommst du?" },
+      { pt: "Eu moro no Brasil", en: "Ich wohne in Brasilien" },
+      { pt: "Eu tenho 25 anos", en: "Ich bin 25 Jahre alt" },
+      { pt: "Eu gosto de música", en: "Ich mag Musik" },
+      { pt: "Onde está o hotel?", en: "Wo ist das Hotel?" },
+      { pt: "A conta, por favor", en: "Die Rechnung, bitte" },
+      { pt: "Bom apetite", en: "Guten Appetit" },
+      { pt: "Eu estou aprendendo alemão", en: "Ich lerne Deutsch" },
+      { pt: "Você fala português?", en: "Sprichst du Portugiesisch?" },
+      { pt: "Que horas são?", en: "Wie spät ist es?" },
+      { pt: "Hoje está um lindo dia", en: "Heute ist ein schöner Tag" }
     ]
   },
   it: {
-    nome: "Italiano", flag: "🇮🇹", code: "it-IT",
+    nome: "Italiano", flag: "🇮🇹", code: "it-IT", cor: "#e53935",
     frases: [
       { pt: "Olá, como você está?", en: "Ciao, come stai?" },
       { pt: "Meu nome é João", en: "Mi chiamo João" },
@@ -717,13 +817,25 @@ const IDIOMAS = {
       { pt: "Eu não entendo", en: "Non capisco" },
       { pt: "Você pode me ajudar?", en: "Puoi aiutarmi?" },
       { pt: "Bom dia", en: "Buongiorno" },
+      { pt: "Boa noite", en: "Buonanotte" },
       { pt: "Até logo", en: "A dopo" },
       { pt: "Eu amo aprender", en: "Adoro imparare" },
-      { pt: "Qual é o seu nome?", en: "Come ti chiami?" }
+      { pt: "Qual é o seu nome?", en: "Come ti chiami?" },
+      { pt: "De onde você é?", en: "Di dove sei?" },
+      { pt: "Eu moro no Brasil", en: "Vivo in Brasile" },
+      { pt: "Eu tenho 25 anos", en: "Ho 25 anni" },
+      { pt: "Eu gosto de música", en: "Mi piace la musica" },
+      { pt: "Onde está o hotel?", en: "Dov'è l'hotel?" },
+      { pt: "A conta, por favor", en: "Il conto, per favore" },
+      { pt: "Bom apetite", en: "Buon appetito" },
+      { pt: "Eu estou aprendendo italiano", en: "Sto imparando l'italiano" },
+      { pt: "Você fala português?", en: "Parli portoghese?" },
+      { pt: "Que horas são?", en: "Che ore sono?" },
+      { pt: "Hoje está um lindo dia", en: "Oggi è una bella giornata" }
     ]
   },
   ja: {
-    nome: "Japonês", flag: "🇯🇵", code: "ja-JP",
+    nome: "Japonês", flag: "🇯🇵", code: "ja-JP", cor: "#ec407a",
     frases: [
       { pt: "Olá", en: "こんにちは" },
       { pt: "Meu nome é João", en: "私はジョアンです" },
@@ -734,51 +846,84 @@ const IDIOMAS = {
       { pt: "Eu não entendo", en: "わかりません" },
       { pt: "Pode me ajudar?", en: "助けてもらえますか" },
       { pt: "Bom dia", en: "おはようございます" },
+      { pt: "Boa noite", en: "おやすみなさい" },
       { pt: "Até logo", en: "またね" },
       { pt: "Eu amo aprender", en: "学ぶことが大好きです" },
-      { pt: "Qual é o seu nome?", en: "お名前は何ですか" }
+      { pt: "Qual é o seu nome?", en: "お名前は何ですか" },
+      { pt: "De onde você é?", en: "どこから来ましたか" },
+      { pt: "Eu moro no Brasil", en: "ブラジルに住んでいます" },
+      { pt: "Eu tenho 25 anos", en: "私は25歳です" },
+      { pt: "Eu gosto de música", en: "音楽が好きです" },
+      { pt: "Onde está o hotel?", en: "ホテルはどこですか" },
+      { pt: "A conta, por favor", en: "お会計をお願いします" },
+      { pt: "Bom apetite", en: "いただきます" },
+      { pt: "Eu estou aprendendo japonês", en: "日本語を勉強しています" },
+      { pt: "Você fala português?", en: "ポルトガル語を話せますか" },
+      { pt: "Que horas são?", en: "今何時ですか" },
+      { pt: "Hoje está um lindo dia", en: "今日はいい天気ですね" }
     ]
   }
 };
 
-/* =========================================================
+/* ================================================================
+   CONQUISTAS
+   ================================================================ */
+const CONQUISTAS = [
+  { id: 'first_lesson', emoji: '🎯', nome: 'Primeira Lição', desc: 'Complete 1 lição', check: u => totalLicoes(u) >= 1 },
+  { id: 'ten_lessons', emoji: '📚', nome: 'Estudioso', desc: 'Complete 10 lições', check: u => totalLicoes(u) >= 10 },
+  { id: 'fifty_lessons', emoji: '🎓', nome: 'Mestre', desc: 'Complete 50 lições', check: u => totalLicoes(u) >= 50 },
+  { id: 'streak_3', emoji: '🔥', nome: 'Chama Acesa', desc: '3 dias seguidos', check: u => u.streak >= 3 },
+  { id: 'streak_7', emoji: '⚡', nome: 'Imparável', desc: '7 dias seguidos', check: u => u.streak >= 7 },
+  { id: 'streak_30', emoji: '🌟', nome: 'Lenda', desc: '30 dias seguidos', check: u => u.streak >= 30 },
+  { id: 'xp_100', emoji: '💯', nome: 'Centurião', desc: '100 XP acumulado', check: u => u.xp >= 100 },
+  { id: 'xp_1000', emoji: '💎', nome: 'Diamante', desc: '1000 XP acumulado', check: u => u.xp >= 1000 },
+  { id: 'polyglot', emoji: '🌍', nome: 'Poliglota', desc: 'Estude 3 idiomas', check: u => Object.keys(u.progresso).filter(k => (u.progresso[k]||[]).some(Boolean)).length >= 3 },
+  { id: 'perfect', emoji: '🏆', nome: 'Perfeito', desc: 'Lição sem erros', check: u => u.perfectLessons >= 1 },
+  { id: 'combo_10', emoji: '⚔️', nome: 'Combo Master', desc: '10 acertos seguidos', check: u => u.maxCombo >= 10 },
+  { id: 'night_owl', emoji: '🦉', nome: 'Coruja Noturna', desc: 'Estude após 22h', check: u => u.nightOwl },
+  { id: 'all_langs', emoji: '👑', nome: 'Colecionador', desc: 'Comece 6 idiomas', check: u => Object.keys(u.progresso).filter(k => (u.progresso[k]||[]).some(Boolean)).length >= 6 }
+];
+
+function totalLicoes(u) {
+  return Object.values(u.progresso).reduce((sum, arr) => sum + arr.filter(Boolean).length, 0);
+}
+
+/* ================================================================
    ESTADO GLOBAL
-   ========================================================= */
-const LESSONS_PER_LANG = 6;
-const EXERCISES_PER_LESSON = 6;
+   ================================================================ */
+const LESSONS_PER_LANG = 8;
+const EXERCISES_PER_LESSON = 8;
+const XP_PER_LESSON = 20;
 
 const state = {
   idiomaAtual: null,
   telaAtual: 'home',
   usuario: {
-    xp: 0,
-    hearts: 5,
-    streak: 0,
+    xp: 0, hearts: 5, gems: 0, streak: 0, maxCombo: 0,
+    perfectLessons: 0, nightOwl: false,
     lastPlayed: null,
-    progresso: {} // { en: [true, true, false, ...], es: [...] }
+    progresso: {},
+    srs: {}, // SRS: { "en::Hello, how are you?" : { level, nextReview } }
+    conquistas: [],
+    srsStats: { correct: 0, wrong: 0 }
   },
   licaoAtual: {
-    exercicios: [],
-    indice: 0,
-    acertos: 0,
-    total: 0
+    exercicios: [], indice: 0, acertos: 0, total: 0,
+    lessonIdx: 0, combo: 0, maxComboInLesson: 0, erros: 0
   }
 };
 
-/* =========================================================
+/* ================================================================
    PERSISTÊNCIA
-   ========================================================= */
-function salvar() {
-  localStorage.setItem('lingualearn_state', JSON.stringify(state.usuario));
-}
+   ================================================================ */
+function salvar() { localStorage.setItem('lingualearn_v3', JSON.stringify(state.usuario)); }
 
 function carregar() {
-  const raw = localStorage.getItem('lingualearn_state');
+  const raw = localStorage.getItem('lingualearn_v3');
   if (raw) {
     try {
       const u = JSON.parse(raw);
       state.usuario = { ...state.usuario, ...u };
-      // Verificar streak
       const hoje = new Date().toDateString();
       const ontem = new Date(Date.now() - 86400000).toDateString();
       if (state.usuario.lastPlayed && state.usuario.lastPlayed !== hoje && state.usuario.lastPlayed !== ontem) {
@@ -791,92 +936,169 @@ function carregar() {
 
 function atualizarTopbar() {
   document.getElementById('streakVal').textContent = state.usuario.streak;
-  document.getElementById('xpVal').textContent = state.usuario.xp;
   document.getElementById('heartsVal').textContent = state.usuario.hearts;
+  document.getElementById('gemsVal').textContent = state.usuario.gems;
 }
 
-/* =========================================================
+/* ================================================================
    NAVEGAÇÃO
-   ========================================================= */
+   ================================================================ */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const backBtn = document.getElementById('backBtn');
+  const bottomNav = document.getElementById('bottomNav');
+
   if (id === 'homeScreen') {
     backBtn.classList.remove('visible');
-    document.getElementById('flagBadge').textContent = '🦉';
+    bottomNav.classList.remove('visible');
   } else if (id === 'trailScreen') {
     backBtn.classList.add('visible');
+    bottomNav.classList.remove('visible');
+  } else if (id === 'lessonScreen') {
+    backBtn.classList.remove('visible');
+    bottomNav.classList.remove('visible');
   } else {
     backBtn.classList.remove('visible');
+    bottomNav.classList.add('visible');
   }
+  atualizarNavAtivo(id);
+}
+
+function atualizarNavAtivo(screenId) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (screenId === 'homeScreen') document.getElementById('navHome').classList.add('active');
+  if (screenId === 'profileScreen') document.getElementById('navProfile').classList.add('active');
+  if (screenId === 'leagueScreen') document.getElementById('navLeague').classList.add('active');
 }
 
 function goBack() {
-  if (state.telaAtual === 'trail') {
-    state.telaAtual = 'home';
-    renderHome();
-    showScreen('homeScreen');
-  }
+  if (state.telaAtual === 'trail') irParaHome();
 }
 
-/* =========================================================
+function irParaHome() {
+  state.telaAtual = 'home';
+  renderHome();
+  showScreen('homeScreen');
+}
+function irParaPerfil() { state.telaAtual = 'profile'; renderPerfil(); showScreen('profileScreen'); }
+function irParaLiga() { state.telaAtual = 'league'; renderLiga(); showScreen('leagueScreen'); }
+
+/* ================================================================
    HOME
-   ========================================================= */
+   ================================================================ */
 function renderHome() {
+  document.getElementById('mascotHome').innerHTML = MASCOT_SVG;
   const grid = document.getElementById('langGrid');
   grid.innerHTML = Object.entries(IDIOMAS).map(([key, lang]) => {
     const prog = state.usuario.progresso[key] || [];
     const completed = prog.filter(Boolean).length;
+    const pct = Math.round((completed / LESSONS_PER_LANG) * 100);
+    const crown = completed >= LESSONS_PER_LANG ? '👑' : (completed > 0 ? `${completed}/${LESSONS_PER_LANG}` : '');
     return `
       <button class="lang-btn" onclick="abrirIdioma('${key}')">
+        ${crown ? `<div class="crown-badge">${crown}</div>` : ''}
         <span class="flag">${lang.flag}</span>
         <div class="name">${lang.nome}</div>
-        <div class="progress-mini">${completed}/${LESSONS_PER_LANG} lições</div>
+        <div class="progress-mini">${pct}% · ${completed}/${LESSONS_PER_LANG}</div>
       </button>
     `;
   }).join('');
 }
 
-/* =========================================================
+/* ================================================================
    TRILHA
-   ========================================================= */
+   ================================================================ */
 function abrirIdioma(key) {
   state.idiomaAtual = key;
   state.telaAtual = 'trail';
-  document.getElementById('flagBadge').textContent = IDIOMAS[key].flag;
   renderTrail();
   showScreen('trailScreen');
 }
 
 function renderTrail() {
   const lang = IDIOMAS[state.idiomaAtual];
-  document.getElementById('trailTitle').textContent = `${lang.flag} ${lang.nome}`;
-  document.getElementById('trailSub').textContent = 'Complete as lições para avançar';
-
   const prog = state.usuario.progresso[state.idiomaAtual] || [];
-  const trail = document.getElementById('trail');
+  const completed = prog.filter(Boolean).length;
+  const pct = Math.round((completed / LESSONS_PER_LANG) * 100);
 
+  document.getElementById('trailHeader').innerHTML = `
+    <h2>${lang.flag} Curso de ${lang.nome}</h2>
+    <p>${completed === LESSONS_PER_LANG ? '👑 Curso completo! Você é incrível!' : `Continue de onde parou`}</p>
+    <div class="stats-row">
+      <div><strong>${completed}</strong><span>Lições</span></div>
+      <div><strong>${pct}%</strong><span>Progresso</span></div>
+      <div><strong>${lang.frases.length}</strong><span>Frases</span></div>
+    </div>
+  `;
+
+  const trail = document.getElementById('trail');
   let html = '';
   for (let i = 0; i < LESSONS_PER_LANG; i++) {
-    const completed = prog[i] === true;
+    const isCompleted = prog[i] === true;
     const unlocked = i === 0 || prog[i-1] === true;
     const offset = i % 3 === 0 ? '' : (i % 3 === 1 ? 'node-offset-1' : 'node-offset-2');
-    const cls = completed ? 'completed' : (unlocked ? 'unlocked' : 'locked');
-    const icon = completed ? '👑' : (unlocked ? (i+1) : '🔒');
+    const cls = isCompleted ? 'completed' : (unlocked ? 'unlocked' : 'locked');
+    const icon = isCompleted ? '👑' : (unlocked ? (i+1) : '🔒');
     html += `
       <button class="lesson-node ${cls} ${offset}" onclick="iniciarLicao(${i})" ${!unlocked ? 'disabled' : ''}>
         ${icon}
         <span class="node-label">Lição ${i+1}</span>
+        ${unlocked && !isCompleted ? `<span class="node-xp-badge">+${XP_PER_LESSON}</span>` : ''}
       </button>
     `;
   }
   trail.innerHTML = html;
 }
 
-/* =========================================================
-   MOTOR DE EXERCÍCIOS
-   ========================================================= */
+/* ================================================================
+   SRS - SPACED REPETITION
+   ================================================================ */
+function getSRSKey(idiomaKey, frase) { return `${idiomaKey}::${frase.en}`; }
+
+function getFrasesPrioritarias(idiomaKey) {
+  const todas = IDIOMAS[idiomaKey].frases;
+  const agora = Date.now();
+  const devidas = [];
+  const novas = [];
+  const futuras = [];
+
+  todas.forEach(f => {
+    const key = getSRSKey(idiomaKey, f);
+    const srs = state.usuario.srs[key];
+    if (!srs) novas.push(f);
+    else if (srs.nextReview <= agora) devidas.push(f);
+    else futuras.push(f);
+  });
+
+  // Prioridade: devidas > novas > futuras
+  return [...shuffle(devidas), ...shuffle(novas), ...shuffle(futuras)];
+}
+
+function atualizarSRS(idiomaKey, frase, acertou) {
+  const key = getSRSKey(idiomaKey, frase);
+  const atual = state.usuario.srs[key] || { level: 0, nextReview: 0 };
+  let novoLevel = atual.level;
+
+  if (acertou) {
+    novoLevel = Math.min(atual.level + 1, 6);
+    if (acertou) state.usuario.srsStats.correct++;
+  } else {
+    novoLevel = Math.max(0, atual.level - 1);
+    state.usuario.srsStats.wrong++;
+  }
+
+  const intervalos = [0, 1, 4, 12, 24, 72, 168]; // horas
+  const horas = intervalos[novoLevel] || 24;
+  state.usuario.srs[key] = {
+    level: novoLevel,
+    nextReview: Date.now() + horas * 3600 * 1000
+  };
+}
+
+/* ================================================================
+   MOTOR DE EXERCÍCIOS (5 tipos)
+   ================================================================ */
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -886,84 +1108,76 @@ function shuffle(arr) {
   return a;
 }
 
-function gerarExercicios(idiomaKey, lessonIndex) {
-  const frases = IDIOMAS[idiomaKey].frases;
-  // Cada lição usa 6 frases (rotaciona um pouco)
-  const start = (lessonIndex * 2) % frases.length;
-  const selecionadas = [];
-  for (let i = 0; i < EXERCISES_PER_LESSON; i++) {
-    selecionadas.push(frases[(start + i) % frases.length]);
-  }
+function gerarExercicios(idiomaKey) {
+  const frases = getFrasesPrioritarias(idiomaKey).slice(0, EXERCISES_PER_LESSON);
+  const todas = IDIOMAS[idiomaKey].frases;
 
-  return selecionadas.map((frase, idx) => {
-    const tipo = idx % 4; // 0=multiple choice PT->Lang, 1=traduzir (banco), 2=ouvir, 3=Lang->PT
-    const todas = frases.filter(f => f.en !== frase.en);
+  return frases.map((frase, idx) => {
+    // Rotaciona tipos: 0=pt->lang, 1=banco, 2=ouvir, 3=lang->pt, 4=digitar
+    const tipos = ['multipla_pt2lang', 'banco', 'ouvir', 'multipla_lang2pt', 'digitar'];
+    const tipo = tipos[idx % tipos.length];
 
-    if (tipo === 0 || tipo === 3) {
-      // múltipla escolha
-      const isPT2Lang = tipo === 0;
-      const pergunta = isPT2Lang ? frase.pt : frase.en;
-      const correta = isPT2Lang ? frase.en : frase.pt;
-      const distratores = shuffle(todas).slice(0, 3).map(f => isPT2Lang ? f.en : f.pt);
+    if (tipo === 'multipla_pt2lang') {
+      const distratores = shuffle(todas.filter(f => f.en !== frase.en)).slice(0, 3).map(f => f.en);
       return {
-        tipo: 'multipla',
-        pergunta,
-        perguntaLabel: isPT2Lang ? 'Como se diz em ' + IDIOMAS[idiomaKey].nome + '?' : 'O que significa?',
-        correta,
-        opcoes: shuffle([correta, ...distratores]),
-        frase
-      };
-    } else if (tipo === 1) {
-      // banco de palavras - montar tradução
-      const palavrasCorretas = frase.en.split(/\s+/);
-      const palavrasExtra = shuffle(todas).slice(0, 2).flatMap(f => f.en.split(/\s+/)).slice(0, 3);
-      const banco = shuffle([...palavrasCorretas, ...palavrasExtra]);
-      return {
-        tipo: 'banco',
-        pergunta: frase.pt,
-        perguntaLabel: 'Traduza para ' + IDIOMAS[idiomaKey].nome,
-        correta: frase.en,
-        banco,
-        frase
-      };
-    } else {
-      // ouvir
-      const distratores = shuffle(todas).slice(0, 3).map(f => f.en);
-      return {
-        tipo: 'ouvir',
-        pergunta: frase.en,
-        perguntaLabel: 'O que você ouviu?',
-        correta: frase.pt,
-        opcoes: shuffle([frase.pt, ...shuffle(todas).slice(0,3).map(f => f.pt)]),
-        frase
+        tipo: 'multipla', pergunta: frase.pt,
+        perguntaLabel: 'Como se diz em ' + IDIOMAS[idiomaKey].nome + '?',
+        correta: frase.en, opcoes: shuffle([frase.en, ...distratores]), frase
       };
     }
+    if (tipo === 'multipla_lang2pt') {
+      const distratores = shuffle(todas.filter(f => f.pt !== frase.pt)).slice(0, 3).map(f => f.pt);
+      return {
+        tipo: 'multipla', pergunta: frase.en,
+        perguntaLabel: 'O que significa?',
+        correta: frase.pt, opcoes: shuffle([frase.pt, ...distratores]), frase
+      };
+    }
+    if (tipo === 'banco') {
+      const palavrasCorretas = frase.en.split(/\s+/);
+      const extras = [];
+      shuffle(todas).forEach(f => {
+        if (extras.length >= 3) return;
+        const ws = f.en.split(/\s+/).filter(w => !palavrasCorretas.includes(w));
+        ws.forEach(w => { if (extras.length < 3 && !extras.includes(w)) extras.push(w); });
+      });
+      return {
+        tipo: 'banco', pergunta: frase.pt,
+        perguntaLabel: 'Traduza para ' + IDIOMAS[idiomaKey].nome,
+        correta: frase.en, banco: shuffle([...palavrasCorretas, ...extras]), frase
+      };
+    }
+    if (tipo === 'ouvir') {
+      const distratores = shuffle(todas.filter(f => f.pt !== frase.pt)).slice(0, 3).map(f => f.pt);
+      return {
+        tipo: 'ouvir', pergunta: frase.en,
+        perguntaLabel: 'O que você ouviu?',
+        correta: frase.pt, opcoes: shuffle([frase.pt, ...distratores]), frase
+      };
+    }
+    // digitar
+    return {
+      tipo: 'digitar', pergunta: frase.pt,
+      perguntaLabel: 'Digite em ' + IDIOMAS[idiomaKey].nome,
+      correta: frase.en, frase
+    };
   });
 }
 
-/* =========================================================
+/* ================================================================
    LIÇÃO
-   ========================================================= */
+   ================================================================ */
 function iniciarLicao(idx) {
-  if (state.usuario.hearts <= 0) {
-    mostrarGameOver();
-    return;
-  }
+  if (state.usuario.hearts <= 0) { mostrarGameOver(); return; }
 
-  const idioma = IDIOMAS[state.idiomaAtual];
-  const exercicios = gerarExercicios(state.idiomaAtual, idx);
+  const exercicios = gerarExercicios(state.idiomaAtual);
   state.licaoAtual = {
-    exercicios,
-    indice: 0,
-    acertos: 0,
-    total: exercicios.length,
-    lessonIdx: idx
+    exercicios, indice: 0, acertos: 0, total: exercicios.length,
+    lessonIdx: idx, combo: 0, maxComboInLesson: 0, erros: 0
   };
 
   state.telaAtual = 'lesson';
-  document.getElementById('flagBadge').textContent = idioma.flag;
   showScreen('lessonScreen');
-  document.getElementById('backBtn').classList.remove('visible');
   renderExercicio();
 }
 
@@ -985,42 +1199,74 @@ function renderExercicio() {
   const pct = (indice / exercicios.length) * 100;
   document.getElementById('lessonProgress').style.width = pct + '%';
 
+  const comboHtml = state.licaoAtual.combo >= 3
+    ? `<span class="combo-badge">🔥 ${state.licaoAtual.combo}x</span>`
+    : '';
+
   let html = `
-    <div class="lesson-sub">Lição ${state.licaoAtual.lessonIdx + 1} · ${indice + 1}/${exercicios.length}</div>
-    <div class="exercise-prompt">${ex.perguntaLabel}</div>
+    <div class="lesson-sub">
+      <span>L ${state.licaoAtual.lessonIdx + 1} · ${indice + 1}/${exercicios.length}</span>
+      ${comboHtml}
+    </div>
+    <div class="exercise-prompt">
+      <span class="icon">${ex.tipo === 'ouvir' ? '🎧' : ex.tipo === 'digitar' ? '⌨️' : ex.tipo === 'banco' ? '🧩' : '💭'}</span>
+      <span>${ex.perguntaLabel}</span>
+    </div>
   `;
 
-  if (ex.tipo === 'multipla' || ex.tipo === 'ouvir') {
-    if (ex.tipo === 'ouvir') {
-      html += `<button class="audio-btn-big" onclick="falar('${ex.pergunta.replace(/'/g, "\\'")}')">🔊</button>`;
-      html += `<p style="text-align:center; color: var(--gray-dark); font-size: 0.9rem; margin-bottom: 1.5rem;">Toque para ouvir novamente</p>`;
-    } else {
-      html += `<h2 style="font-size: 1.6rem; margin-bottom: 1.5rem;">"${ex.pergunta}"</h2>`;
-    }
+  if (ex.tipo === 'multipla') {
+    html += `<h2 style="font-size:1.5rem; margin:1rem 0 1.3rem; color:var(--text);">"${ex.pergunta}"</h2>`;
     html += `<div class="options">`;
     ex.opcoes.forEach((op, i) => {
       const letra = String.fromCharCode(65 + i);
       html += `<button class="option" data-value="${op.replace(/"/g, '&quot;')}" onclick="selecionarOpcao(this, '${op.replace(/'/g, "\\'")}')">
-        <span class="num">${letra}</span>
-        <span>${op}</span>
+        <span class="num">${letra}</span><span>${op}</span>
+      </button>`;
+    });
+    html += `</div>`;
+  } else if (ex.tipo === 'ouvir') {
+    html += `<button class="audio-btn-big" id="audioBtn" onclick="reproduzirAudio()">🔊</button>`;
+    html += `<p style="text-align:center; color:var(--text-light); font-size:0.9rem; margin-bottom:1.2rem;">Toque para ouvir novamente</p>`;
+    html += `<div class="options">`;
+    ex.opcoes.forEach((op, i) => {
+      const letra = String.fromCharCode(65 + i);
+      html += `<button class="option" data-value="${op.replace(/"/g, '&quot;')}" onclick="selecionarOpcao(this, '${op.replace(/'/g, "\\'")}')">
+        <span class="num">${letra}</span><span>${op}</span>
       </button>`;
     });
     html += `</div>`;
   } else if (ex.tipo === 'banco') {
-    html += `<h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">"${ex.pergunta}"</h2>`;
+    html += `<h2 style="font-size:1.4rem; margin:1rem 0 1.3rem; color:var(--text);">"${ex.pergunta}"</h2>`;
     html += `<div class="word-bank-area" id="wordBankArea"></div>`;
     html += `<div class="word-bank" id="wordBank">`;
     ex.banco.forEach((p, i) => {
       html += `<button class="word-chip" data-word="${p.replace(/"/g, '&quot;')}" data-idx="${i}" onclick="usarPalavra(this)">${p}</button>`;
     });
     html += `</div>`;
+  } else if (ex.tipo === 'digitar') {
+    html += `<h2 style="font-size:1.4rem; margin:1rem 0 1.3rem; color:var(--text);">"${ex.pergunta}"</h2>`;
+    html += `<input type="text" class="type-input" id="typeInput" placeholder="Digite a tradução..." autocomplete="off" autocapitalize="off" spellcheck="false" oninput="onTypeInput()">`;
   }
 
   content.innerHTML = html;
 
   if (ex.tipo === 'ouvir') {
-    setTimeout(() => falar(ex.pergunta), 400);
+    setTimeout(() => reproduzirAudio(), 400);
   }
+  if (ex.tipo === 'digitar') {
+    setTimeout(() => document.getElementById('typeInput').focus(), 200);
+  }
+}
+
+function reproduzirAudio() {
+  const { exercicios, indice } = state.licaoAtual;
+  const ex = exercicios[indice];
+  const btn = document.getElementById('audioBtn');
+  if (btn) {
+    btn.classList.add('playing');
+    setTimeout(() => btn.classList.remove('playing'), 1200);
+  }
+  falar(ex.pergunta);
 }
 
 let respostaSelecionada = null;
@@ -1028,28 +1274,20 @@ let palavrasUsadas = [];
 
 function selecionarOpcao(btn, valor) {
   if (btn.disabled || document.getElementById('checkBtn').textContent === 'Continuar') return;
-  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-  btn.classList.add('selected');
-  respostaSelecionada = valor;
-  // Marca visual
   document.querySelectorAll('.option').forEach(o => {
-    if (o === btn) {
-      o.style.borderColor = 'var(--blue)';
-      o.style.background = '#e6f4ff';
-    } else {
-      o.style.borderColor = 'var(--gray)';
-      o.style.background = 'white';
-    }
+    o.style.borderColor = '';
+    o.style.background = '';
   });
+  btn.style.borderColor = 'var(--blue)';
+  btn.style.background = 'var(--bg-alt)';
+  respostaSelecionada = valor;
   document.getElementById('checkBtn').disabled = false;
 }
 
 function usarPalavra(btn) {
   if (btn.classList.contains('used')) return;
-  const word = btn.dataset.word;
-  const idx = btn.dataset.idx;
   btn.classList.add('used');
-  palavrasUsadas.push({ word, idx });
+  palavrasUsadas.push({ word: btn.dataset.word, idx: btn.dataset.idx });
   renderWordBankArea();
   document.getElementById('checkBtn').disabled = palavrasUsadas.length === 0;
 }
@@ -1066,14 +1304,19 @@ function removerPalavra(idx) {
 function renderWordBankArea() {
   const area = document.getElementById('wordBankArea');
   if (!area) return;
-  area.innerHTML = palavrasUsadas.map(p => `
-    <button class="word-chip placed" onclick="removerPalavra('${p.idx}')">${p.word}</button>
-  `).join('');
+  area.innerHTML = palavrasUsadas.map(p =>
+    `<button class="word-chip placed" onclick="removerPalavra('${p.idx}')">${p.word}</button>`
+  ).join('');
 }
 
-/* =========================================================
+function onTypeInput() {
+  const inp = document.getElementById('typeInput');
+  document.getElementById('checkBtn').disabled = inp.value.trim().length === 0;
+}
+
+/* ================================================================
    VERIFICAR RESPOSTA
-   ========================================================= */
+   ================================================================ */
 function checkAnswer() {
   const { exercicios, indice } = state.licaoAtual;
   const ex = exercicios[indice];
@@ -1083,22 +1326,28 @@ function checkAnswer() {
   if (ex.tipo === 'multipla' || ex.tipo === 'ouvir') {
     resposta = respostaSelecionada || '';
     correta = resposta === ex.correta;
-    // Marcar botões
     document.querySelectorAll('.option').forEach(btn => {
       btn.disabled = true;
       const val = btn.dataset.value;
       if (val === ex.correta) btn.classList.add('correct');
-      else if (btn.classList.contains('selected') && val !== ex.correta) btn.classList.add('wrong');
+      else if (respostaSelecionada === val && val !== ex.correta) btn.classList.add('wrong');
       btn.style.borderColor = '';
       btn.style.background = '';
     });
   } else if (ex.tipo === 'banco') {
     resposta = palavrasUsadas.map(p => p.word).join(' ');
-    correta = resposta === ex.correta;
+    correta = normalizar(resposta) === normalizar(ex.correta);
     document.querySelectorAll('.word-chip').forEach(c => c.disabled = true);
+  } else if (ex.tipo === 'digitar') {
+    const inp = document.getElementById('typeInput');
+    resposta = inp.value.trim();
+    correta = normalizar(resposta) === normalizar(ex.correta);
+    inp.classList.add(correta ? 'correct' : 'wrong');
+    inp.disabled = true;
   }
 
-  // Feedback
+  atualizarSRS(state.idiomaAtual, ex.frase, correta);
+
   const fb = document.getElementById('feedbackBox');
   const icon = document.getElementById('feedbackIcon');
   const text = document.getElementById('feedbackText');
@@ -1107,15 +1356,27 @@ function checkAnswer() {
 
   if (correta) {
     state.licaoAtual.acertos++;
+    state.licaoAtual.combo++;
+    if (state.licaoAtual.combo > state.licaoAtual.maxComboInLesson) {
+      state.licaoAtual.maxComboInLesson = state.licaoAtual.combo;
+    }
+    if (state.licaoAtual.combo > state.usuario.maxCombo) {
+      state.usuario.maxCombo = state.licaoAtual.combo;
+    }
     fb.classList.add('correct');
     icon.textContent = '✅';
     text.textContent = 'Muito bem!';
-    sub.textContent = shuffle(['Boa!', 'Continue assim!', 'Excelente!', 'Você consegue!'])[0];
+    const frases = ['Boa!', 'Continue assim!', 'Excelente!', 'Você consegue!', 'Arrasou!', 'Perfeito!'];
+    sub.textContent = state.licaoAtual.combo >= 3
+      ? `🔥 Combo x${state.licaoAtual.combo}! ${shuffle(frases)[0]}`
+      : shuffle(frases)[0];
     tocarSom('correct');
+    burstStars();
   } else {
+    state.licaoAtual.erros++;
+    state.licaoAtual.combo = 0;
     state.usuario.hearts = Math.max(0, state.usuario.hearts - 1);
-    atualizarTopbar();
-    salvar();
+    atualizarTopbar(); salvar();
     fb.classList.add('wrong');
     icon.textContent = '❌';
     text.textContent = 'Resposta correta:';
@@ -1125,17 +1386,20 @@ function checkAnswer() {
     setTimeout(() => document.querySelector('.lesson-content').classList.remove('shake'), 500);
   }
 
-  // Mudar botão para "Continuar"
   const btn = document.getElementById('checkBtn');
   btn.textContent = 'Continuar';
   btn.className = correta ? 'btn btn-primary' : 'btn btn-danger';
   btn.disabled = false;
   btn.onclick = proximoExercicio;
 
-  // Verificar game over
-  if (state.usuario.hearts <= 0) {
-    setTimeout(() => mostrarGameOver(), 1500);
-  }
+  if (state.usuario.hearts <= 0) setTimeout(() => mostrarGameOver(), 1500);
+}
+
+function normalizar(s) {
+  return s.toLowerCase()
+    .replace(/[¿?¡!.,;:]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function proximoExercicio() {
@@ -1145,48 +1409,66 @@ function proximoExercicio() {
   renderExercicio();
 }
 
-/* =========================================================
+/* ================================================================
    FINALIZAR LIÇÃO
-   ========================================================= */
+   ================================================================ */
 function finalizarLicao() {
-  const { acertos, total, lessonIdx } = state.licaoAtual;
-  const xpGanho = acertos * 10;
+  const { acertos, total, lessonIdx, maxComboInLesson } = state.licaoAtual;
+  const xpBase = acertos * 5;
+  const bonusCombo = maxComboInLesson >= 5 ? 10 : 0;
+  const bonusPerfeito = acertos === total ? 15 : 0;
+  const xpGanho = xpBase + bonusCombo + bonusPerfeito;
   const precisao = Math.round((acertos / total) * 100);
 
-  // Atualizar progresso
   state.usuario.xp += xpGanho;
-  if (!state.usuario.progresso[state.idiomaAtual]) {
-    state.usuario.progresso[state.idiomaAtual] = [];
-  }
-  if (precisao >= 60) {
-    state.usuario.progresso[state.idiomaAtual][lessonIdx] = true;
-  }
+  state.usuario.gems += Math.floor(xpGanho / 10);
 
-  // Streak
+  if (precisao === 100) state.usuario.perfectLessons++;
+
+  const hora = new Date().getHours();
+  if (hora >= 22 || hora < 5) state.usuario.nightOwl = true;
+
+  if (!state.usuario.progresso[state.idiomaAtual]) state.usuario.progresso[state.idiomaAtual] = [];
+  if (precisao >= 60) state.usuario.progresso[state.idiomaAtual][lessonIdx] = true;
+
   const hoje = new Date().toDateString();
   const ontem = new Date(Date.now() - 86400000).toDateString();
   if (state.usuario.lastPlayed !== hoje) {
-    if (state.usuario.lastPlayed === ontem) {
-      state.usuario.streak++;
-    } else {
-      state.usuario.streak = 1;
-    }
+    if (state.usuario.lastPlayed === ontem) state.usuario.streak++;
+    else state.usuario.streak = 1;
     state.usuario.lastPlayed = hoje;
   }
+
+  // Verificar conquistas novas
+  const novasConquistas = [];
+  CONQUISTAS.forEach(c => {
+    if (!state.usuario.conquistas.includes(c.id) && c.check(state.usuario)) {
+      state.usuario.conquistas.push(c.id);
+      novasConquistas.push(c);
+    }
+  });
 
   atualizarTopbar();
   salvar();
 
-  // Modal
+  // Preencher modal
   document.getElementById('resultXP').textContent = '+' + xpGanho;
   document.getElementById('resultAcc').textContent = precisao + '%';
+  document.getElementById('resultCombo').textContent = 'x' + maxComboInLesson;
+
   const icon = document.getElementById('resultIcon');
   const title = document.getElementById('resultTitle');
   const sub = document.getElementById('resultSub');
+
   if (precisao === 100) {
     icon.textContent = '🏆';
-    title.textContent = 'Perfeito!';
-    sub.textContent = 'Você acertou tudo!';
+    title.textContent = 'PERFEITO!';
+    sub.textContent = 'Você acertou tudo! Incrível!';
+    if (!state.usuario.conquistas.includes('perfect')) {}
+  } else if (precisao >= 80) {
+    icon.textContent = '🌟';
+    title.textContent = 'Excelente!';
+    sub.textContent = 'Você está indo muito bem!';
   } else if (precisao >= 60) {
     icon.textContent = '🎉';
     title.textContent = 'Lição Completa!';
@@ -1196,10 +1478,27 @@ function finalizarLicao() {
     title.textContent = 'Continue tentando!';
     sub.textContent = 'Você vai conseguir!';
   }
+
+  // Conquistas no modal
+  const achList = document.getElementById('achievementsUnlocked');
+  if (novasConquistas.length > 0) {
+    achList.innerHTML = novasConquistas.map(c => `
+      <div class="achievement-toast">
+        <span class="emoji">${c.emoji}</span>
+        <div class="info">
+          <strong>🏅 Nova conquista!</strong>
+          <span>${c.nome} — ${c.desc}</span>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    achList.innerHTML = '';
+  }
+
   document.getElementById('resultModal').classList.add('active');
 
   if (precisao >= 60) {
-    soltarConfetes();
+    soltarConfetes(80);
     tocarSom('complete');
   }
 }
@@ -1211,30 +1510,36 @@ function closeResult() {
   showScreen('trailScreen');
 }
 
-/* =========================================================
-   GAME OVER (SEM CORAÇÕES)
-   ========================================================= */
+/* ================================================================
+   GAME OVER
+   ================================================================ */
 function mostrarGameOver() {
   const modal = document.getElementById('resultModal');
   document.getElementById('resultIcon').textContent = '💔';
-  document.getElementById('resultIcon').className = 'gameover-icon';
   document.getElementById('resultTitle').textContent = 'Sem corações!';
-  document.getElementById('resultSub').textContent = 'Você pode tentar novamente ou esperar para recuperar.';
-  document.getElementById('resultXP').textContent = '+0';
+  document.getElementById('resultSub').textContent = 'Recupere para continuar aprendendo.';
+  document.getElementById('resultXP').textContent = '—';
   document.getElementById('resultAcc').textContent = '—';
-  modal.querySelector('.btn').textContent = 'Voltar';
+  document.getElementById('resultCombo').textContent = '—';
+  document.getElementById('achievementsUnlocked').innerHTML = '';
 
-  // Botão de recarregar corações
+  const btnContinuar = modal.querySelector('.btn');
+  btnContinuar.textContent = 'Voltar';
+
   if (!document.getElementById('restoreBtn')) {
     const b = document.createElement('button');
     b.id = 'restoreBtn';
     b.className = 'btn btn-secondary';
-    b.style.marginTop = '0.5rem';
-    b.textContent = '❤️ Recuperar corações';
+    b.style.marginTop = '0.6rem';
+    b.textContent = '💎 Usar 10 gemas';
     b.onclick = () => {
+      if (state.usuario.gems < 10) {
+        alert('Você precisa de 10 gemas! 💎');
+        return;
+      }
+      state.usuario.gems -= 10;
       state.usuario.hearts = 5;
-      atualizarTopbar();
-      salvar();
+      atualizarTopbar(); salvar();
       modal.classList.remove('active');
       closeResult();
     };
@@ -1243,18 +1548,14 @@ function mostrarGameOver() {
   modal.classList.add('active');
 }
 
-/* =========================================================
+/* ================================================================
    ÁUDIO E SONS
-   ========================================================= */
+   ================================================================ */
 function falar(texto) {
-  if (!('speechSynthesis' in window)) {
-    alert('Seu navegador não suporta síntese de voz.');
-    return;
-  }
+  if (!('speechSynthesis' in window)) { return; }
   const utter = new SpeechSynthesisUtterance(texto);
-  utter.lang = IDIOMAS[state.idiomaAtual].code;
+  utter.lang = IDIOMAS[state.idiomaAtual]?.code || 'en-US';
   utter.rate = 0.85;
-  utter.pitch = 1;
   speechSynthesis.cancel();
   speechSynthesis.speak(utter);
 }
@@ -1263,41 +1564,184 @@ let audioCtx = null;
 function tocarSom(tipo) {
   try {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const notes = tipo === 'correct' ? [523.25, 659.25, 783.99] : [392, 311.13];
+    const notes = {
+      correct: [523.25, 659.25, 783.99],
+      wrong: [392, 311.13],
+      complete: [523.25, 659.25, 783.99, 1046.5]
+    }[tipo] || [440];
     notes.forEach((freq, i) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
       osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.2);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(audioCtx.currentTime + i * 0.1);
-      osc.stop(audioCtx.currentTime + i * 0.1 + 0.25);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime + i * 0.09);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.09 + 0.22);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + i * 0.09);
+      osc.stop(audioCtx.currentTime + i * 0.09 + 0.28);
     });
   } catch(e) {}
 }
 
-function soltarConfetes() {
-  const colors = ['#58cc02', '#1cb0f6', '#ffc800', '#ff4b4b', '#ce82ff'];
-  for (let i = 0; i < 50; i++) {
+function burstStars() {
+  const colors = ['⭐', '✨', '🌟', '💫'];
+  for (let i = 0; i < 4; i++) {
+    const s = document.createElement('div');
+    s.className = 'star-burst';
+    s.textContent = colors[Math.floor(Math.random() * colors.length)];
+    const rect = document.getElementById('checkBtn').getBoundingClientRect();
+    s.style.left = rect.left + 'px';
+    s.style.top = rect.top + 'px';
+    s.style.setProperty('--tx', (Math.random() * 200 - 100) + 'px');
+    s.style.setProperty('--ty', (-Math.random() * 150 - 50) + 'px');
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 1000);
+  }
+}
+
+function soltarConfetes(qtd = 50) {
+  const colors = ['#58cc02', '#1cb0f6', '#ffc800', '#ff4b4b', '#ce82ff', '#ff9600'];
+  for (let i = 0; i < qtd; i++) {
     const c = document.createElement('div');
     c.className = 'confetti';
     c.style.left = Math.random() * 100 + '%';
     c.style.background = colors[Math.floor(Math.random() * colors.length)];
-    c.style.animationDelay = Math.random() * 0.5 + 's';
-    c.style.animationDuration = (1.5 + Math.random()) + 's';
+    c.style.animationDelay = Math.random() * 0.6 + 's';
+    c.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
+    c.style.width = (6 + Math.random() * 10) + 'px';
+    c.style.height = c.style.width;
     document.body.appendChild(c);
-    setTimeout(() => c.remove(), 3000);
+    setTimeout(() => c.remove(), 3500);
   }
 }
 
-/* =========================================================
+/* ================================================================
+   PERFIL
+   ================================================================ */
+function renderPerfil() {
+  const u = state.usuario;
+  const langsIniciados = Object.keys(u.progresso).filter(k => (u.progresso[k]||[]).some(Boolean)).length;
+  const licoesFeitas = totalLicoes(u);
+
+  document.getElementById('profileName').textContent = `Nível ${Math.floor(u.xp / 100) + 1}`;
+  document.getElementById('profileSub').textContent = `${u.xp} XP totais · ${licoesFeitas} lições concluídas`;
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-box"><div class="emoji">⚡</div><div class="val">${u.xp}</div><div class="lbl">XP Total</div></div>
+    <div class="stat-box"><div class="emoji">🔥</div><div class="val">${u.streak}</div><div class="lbl">Streak</div></div>
+    <div class="stat-box"><div class="emoji">🌍</div><div class="val">${langsIniciados}/6</div><div class="lbl">Idiomas</div></div>
+    <div class="stat-box"><div class="emoji">💎</div><div class="val">${u.gems}</div><div class="lbl">Gemas</div></div>
+    <div class="stat-box"><div class="emoji">🎯</div><div class="val">${licoesFeitas}</div><div class="lbl">Lições</div></div>
+    <div class="stat-box"><div class="emoji">⚔️</div><div class="val">${u.maxCombo}</div><div class="lbl">Combo Máx</div></div>
+    <div class="stat-box"><div class="emoji">🏆</div><div class="val">${u.perfectLessons || 0}</div><div class="lbl">Perfeitas</div></div>
+    <div class="stat-box"><div class="emoji">📖</div><div class="val">${Object.keys(u.srs).length}</div><div class="lbl">SRS</div></div>
+  `;
+
+  document.getElementById('achievementsGrid').innerHTML = CONQUISTAS.map(c => {
+    const unlocked = u.conquistas.includes(c.id);
+    return `
+      <div class="achievement-card ${unlocked ? 'unlocked' : ''}">
+        <div class="emoji">${c.emoji}</div>
+        <div class="name">${c.nome}</div>
+        <div class="desc">${c.desc}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ================================================================
+   LIGA (Leaderboard fake + você)
+   ================================================================ */
+function renderLiga() {
+  const ligas = [
+    { nome: 'Bronze', emoji: '🥉', min: 0 },
+    { nome: 'Prata', emoji: '🥈', min: 100 },
+    { nome: 'Ouro', emoji: '🥇', min: 300 },
+    { nome: 'Diamante', emoji: '💎', min: 700 },
+    { nome: 'Rubi', emoji: '🔴', min: 1500 }
+  ];
+  const u = state.usuario;
+  let ligaAtual = ligas[0];
+  for (const l of ligas) if (u.xp >= l.min) ligaAtual = l;
+
+  document.getElementById('leagueBanner').innerHTML = `
+    <div class="trophy">${ligaAtual.emoji}</div>
+    <h3>Liga ${ligaAtual.nome}</h3>
+    <p style="opacity: 0.9; font-size: 0.85rem;">${u.xp} XP esta semana</p>
+  `;
+
+  // Bots com XP variável (reproduzível)
+  const seed = Math.floor(u.xp / 10);
+  const bots = [
+    { nome: 'Sofia', avatar: '🦊', xp: 320 + (seed % 80) },
+    { nome: 'Miguel', avatar: '🐼', xp: 280 + (seed % 60) },
+    { nome: 'Ana', avatar: '🐨', xp: 250 + (seed % 50) },
+    { nome: 'Você', avatar: '🦉', xp: u.xp, me: true },
+    { nome: 'Lucas', avatar: '🦁', xp: Math.max(50, 150 + (seed % 40) - 30) },
+    { nome: 'Bia', avatar: '🐰', xp: Math.max(30, 100 + (seed % 30) - 20) },
+    { nome: 'Pedro', avatar: '🐸', xp: 80 + (seed % 25) },
+    { nome: 'Júlia', avatar: '🐧', xp: 60 + (seed % 20) }
+  ];
+
+  const ranking = bots.sort((a, b) => b.xp - a.xp);
+  document.getElementById('leaderboard').innerHTML = ranking.map((p, i) => `
+    <div class="lb-row ${p.me ? 'me' : ''}">
+      <div class="rank">${i + 1}º</div>
+      <div class="avatar-mini">${p.avatar}</div>
+      <div class="name">${p.nome}</div>
+      <div class="xp">⚡ ${p.xp}</div>
+    </div>
+  `).join('');
+}
+
+/* ================================================================
+   TEMA
+   ================================================================ */
+function toggleTheme() {
+  const atual = document.body.dataset.theme;
+  const novo = atual === 'dark' ? 'light' : 'dark';
+  document.body.dataset.theme = novo;
+  localStorage.setItem('lingualearn_theme', novo);
+}
+
+function carregarTema() {
+  const salvo = localStorage.getItem('lingualearn_theme');
+  if (salvo) document.body.dataset.theme = salvo;
+  else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.body.dataset.theme = 'dark';
+  }
+}
+
+/* ================================================================
    INIT
-   ========================================================= */
+   ================================================================ */
+carregarTema();
 carregar();
 renderHome();
+
+// Registra service worker inline para PWA
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  // SW simples para cache
+  const swCode = `
+    const CACHE = 'lingualearn-v3';
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+    self.addEventListener('fetch', e => {
+      if (e.request.method !== 'GET') return;
+      e.respondWith(
+        caches.match(e.request).then(r => r || fetch(e.request).then(resp => {
+          const copy = resp.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy));
+          return resp;
+        }).catch(() => caches.match('./')))
+      );
+    });
+  `;
+  try {
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(blob));
+  } catch(e) {}
+}
 </script>
 </body>
 </html>
